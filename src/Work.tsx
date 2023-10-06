@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import FormModal from "./components/FormModal";
+import axios from "axios";
 
 export type Customer = Record<
   "id" | "firstName" | "lastName" | "title" | "email" | "country",
@@ -13,10 +14,25 @@ const Example = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [editUser, setEditUser] = useState<Customer | null>(null);
 
+  const fetchCustomers = async () => {
+    try {
+      const response = await axios.get(API_BASE_URL + "/customers?_page=2");
+      const linkHeader = response.headers.link;
+      console.log('**link', linkHeader);
+
+      let lastPageNumber = linkHeader.match(/_page=(\d+)>; rel="last"/)[1];
+      console.log('**last', lastPageNumber);
+    } catch (error) {
+        console.log("Error:", error);
+    }
+  }
+
   useEffect(() => {
     fetch(API_BASE_URL + "/customers")
       .then((result) => result.json())
       .then((customers) => setCustomers(customers));
+
+    fetchCustomers()
   }, []);
 
   useEffect(() => {
