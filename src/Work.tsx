@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import FormModal from "./components/FormModal";
 
-type Customer = Record<
+export type Customer = Record<
   "id" | "firstName" | "lastName" | "title" | "email" | "country",
   string
 >;
@@ -10,12 +10,24 @@ const API_BASE_URL = "http://localhost:4000";
 
 const Example = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [editUser, setEditUser] = useState<Customer | null>(null);
 
   useEffect(() => {
     fetch(API_BASE_URL + "/customers")
       .then((result) => result.json())
       .then((customers) => setCustomers(customers));
   }, []);
+
+  const handleFormModal = () => {
+    setIsOpen(!isOpen);
+    setEditUser(null);
+  };
+
+  const handleEditUser = (user: Customer) => {
+    setIsOpen(true);
+    setEditUser(user);
+  };
 
   return (
     <div className="mx-auto max-w-7xl p-6 lg:px-8">
@@ -28,12 +40,14 @@ const Example = () => {
             <button
               type="button"
               className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={handleFormModal}
             >
               Add Customer
             </button>
           </div>
         </div>
-        {/* <div className="-mx-4 mt-8 sm:-mx-0">
+
+        <div className="-mx-4 mt-8 sm:-mx-0">
           <table className="min-w-full divide-y divide-gray-300">
             <thead>
               <tr>
@@ -77,6 +91,7 @@ const Example = () => {
                     <a
                       href="#"
                       className="text-indigo-600 hover:text-indigo-900"
+                      onClick={() => handleEditUser(person)}
                     >
                       Edit
                     </a>
@@ -85,9 +100,15 @@ const Example = () => {
               ))}
             </tbody>
           </table>
-        </div> */}
+        </div>
 
-        <FormModal/>
+        {isOpen ? (
+          editUser ? (
+            <FormModal userData={editUser} toggle={handleFormModal} />
+          ) : (
+            <FormModal toggle={handleFormModal} />
+          )
+        ) : null}
       </div>
     </div>
   );
