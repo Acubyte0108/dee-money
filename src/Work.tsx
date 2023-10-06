@@ -19,6 +19,12 @@ const Example = () => {
       .then((customers) => setCustomers(customers));
   }, []);
 
+  useEffect(() => {
+    fetch(API_BASE_URL + "/customers")
+      .then((result) => result.json())
+      .then((customers) => setCustomers(customers));
+  }, [isOpen]);
+
   const handleFormModal = () => {
     setIsOpen(!isOpen);
     setEditUser(null);
