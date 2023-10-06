@@ -1,0 +1,232 @@
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import regex from "../constants/regex";
+
+const API_BASE_URL = "http://localhost:4000";
+
+const UserSchema = z.object({
+  firstName: z
+    .string()
+    .min(1, "Please fill the first name")
+    .regex(regex.englishCharacterOnly, {
+      message: "Must only contain English alphabets",
+    })
+    .regex(regex.capitalFirst, {
+      message: "First character must be capitalized and not symbols",
+    })
+    .regex(regex.containsOneSymbol, {
+      message: "Can only contains 1 apostrophe and 1 dot per one word",
+    })
+    .refine((value) => !regex.specialWhitespace.test(value), {
+      message: "Wrong spacebar format",
+    }),
+  lastName: z
+    .string()
+    .min(1, "Please fill the last name")
+    .regex(regex.englishCharacterOnly, {
+      message: "Must only contain English alphabets",
+    })
+    .regex(regex.capitalFirst, {
+      message: "First character must be capitalized and not symbols",
+    })
+    .regex(regex.containsOneSymbol, {
+      message: "Can only contains 1 apostrophe and 1 dot per one word",
+    })
+    .refine((value) => !regex.specialWhitespace.test(value), {
+      message: "Wrong spacebar format",
+    }),
+  email: z.string().min(1, "Please fill the email address").email(),
+  title: z.string().min(1, "Please select title"),
+  country: z.string().min(1, "Please select country"),
+});
+
+const FormModal = () => {
+  const [titles, setTitles] = useState<string[]>([]);
+  const [countries, setCountries] = useState<string[]>([]);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<z.infer<typeof UserSchema>>({
+    resolver: zodResolver(UserSchema),
+  });
+
+  useEffect(() => {
+    fetch(API_BASE_URL + "/countries")
+      .then((result) => result.json())
+      .then((countries) => setCountries(countries));
+
+    fetch(API_BASE_URL + "/titles")
+      .then((result) => result.json())
+      .then((titles) => setTitles(titles));
+  }, []);
+
+  useEffect(() => {
+    if (titles.length > 0) {
+      setValue("title", titles[0]);
+    }
+  }, [countries]);
+
+  useEffect(() => {
+    if (countries.length > 0) {
+      setValue("country", countries[0]);
+    }
+  }, [countries]);
+
+  const onSubmit = async (data: z.infer<typeof UserSchema>) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/customers",
+        data
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response.data);
+        reset();
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="pb-12 mt-12">
+        <h2 className="text-base font-semibold leading-7 text-gray-900">
+          Add Customer
+        </h2>
+
+        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="first-name"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              First name
+            </label>
+            <div className="mt-2">
+              <input
+                {...register("firstName")}
+                type="text"
+                id="first-name"
+                autoComplete="off"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+              {errors.firstName && (
+                <p className="text-red-500">{`${errors.firstName.message}`}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="last-name"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Last name
+            </label>
+            <div className="mt-2">
+              <input
+                {...register("lastName")}
+                type="text"
+                id="last-name"
+                autoComplete="off"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+              {errors.lastName && (
+                <p className="text-red-500">{errors.lastName.message}</p>
+              )}
+            </div>
+          </div>
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Email address
+            </label>
+            <div className="mt-2">
+              <input
+                {...register("email")}
+                id="email"
+                type="email"
+                autoComplete="off"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+              {errors.email && (
+                <p className="text-red-500">{errors.email.message}</p>
+              )}
+            </div>
+          </div>
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Title
+            </label>
+            <div className="mt-2">
+              <select
+                {...register("title")}
+                id="title"
+                autoComplete="off"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+              >
+                {titles.map((title, i) => (
+                  <option key={`${title}-${i}`} value={title}>
+                    {title}
+                  </option>
+                ))}
+              </select>
+              {errors.title && (
+                <p className="text-red-500">{errors.title.message}</p>
+              )}
+            </div>
+          </div>
+          <div className="sm:col-span-3">
+            <label
+              htmlFor="country"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Country
+            </label>
+            <div className="mt-2">
+              <select
+                {...register("country")}
+                id="country"
+                autoComplete="off"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+              >
+                {countries.map((country, i) => (
+                  <option key={`${country}-${i}`} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </select>
+              {errors.country && (
+                <p className="text-red-500">{errors.country.message}</p>
+              )}
+            </div>
+          </div>
+          <div className="sm:col-span-6">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  );
+};
+
+export default FormModal;

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import FormModal from "./components/FormModal";
 
 type Customer = Record<
   "id" | "firstName" | "lastName" | "title" | "email" | "country",
@@ -9,21 +10,11 @@ const API_BASE_URL = "http://localhost:4000";
 
 const Example = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [countries, setCountries] = useState<string[]>([]);
-  const [titles, setTitles] = useState<string[]>([]);
 
   useEffect(() => {
     fetch(API_BASE_URL + "/customers")
       .then((result) => result.json())
       .then((customers) => setCustomers(customers));
-
-    fetch(API_BASE_URL + "/countries")
-      .then((result) => result.json())
-      .then((countries) => setCountries(countries));
-
-    fetch(API_BASE_URL + "/titles")
-      .then((result) => result.json())
-      .then((titles) => setTitles(titles));
   }, []);
 
   return (
@@ -42,7 +33,7 @@ const Example = () => {
             </button>
           </div>
         </div>
-        <div className="-mx-4 mt-8 sm:-mx-0">
+        {/* <div className="-mx-4 mt-8 sm:-mx-0">
           <table className="min-w-full divide-y divide-gray-300">
             <thead>
               <tr>
@@ -94,116 +85,9 @@ const Example = () => {
               ))}
             </tbody>
           </table>
-        </div>
+        </div> */}
 
-        <div className="pb-12 mt-12">
-          <h2 className="text-base font-semibold leading-7 text-gray-900">
-            Add Customer
-          </h2>
-
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="first-name"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                First name
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  name="first-name"
-                  id="first-name"
-                  autoComplete="given-name"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="last-name"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Last name
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  name="last-name"
-                  id="last-name"
-                  autoComplete="family-name"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Title
-              </label>
-              <div className="mt-2">
-                <select
-                  id="title"
-                  name="title"
-                  autoComplete="title-name"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                >
-                  {titles.map((title) => (
-                    <option>{title}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="country"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Country
-              </label>
-              <div className="mt-2">
-                <select
-                  id="country"
-                  name="country"
-                  autoComplete="country-name"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                >
-                  {countries.map((country) => (
-                    <option>{country}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className="sm:col-span-6">
-              <button
-                type="button"
-                className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </div>
+        <FormModal/>
       </div>
     </div>
   );

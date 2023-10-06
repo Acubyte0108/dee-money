@@ -4,16 +4,21 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently 'npm run server' 'vite'",
-    "server": "json-server --watch db.json --port 4000",
+    "dev": "concurrently \"npm run server\" \"vite --port 3030\"",
+    "server": "json-server --watch db.json --middlewares ./checkDuplicate.cjs --port 4000",
     "migrate:db": "node ./migrate-db.js",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.1",
+    "axios": "^1.5.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.47.0",
+    "react-query": "^3.39.3",
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.1.0",
