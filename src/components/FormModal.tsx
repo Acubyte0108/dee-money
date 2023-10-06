@@ -24,7 +24,7 @@ const UserSchema = z.object({
       message: "First character must be capitalized and not symbols",
     })
     .regex(regex.containsOneSymbol, {
-      message: "Can only contains 1 apostrophe and 1 dot per one word",
+      message: "Can contains only 1 apostrophe and 1 dot and 1 hyphen symbol per word",
     })
     .refine((value) => !regex.specialWhitespace.test(value), {
       message: "Wrong spacebar format",
@@ -39,7 +39,7 @@ const UserSchema = z.object({
       message: "First character must be capitalized and not symbols",
     })
     .regex(regex.containsOneSymbol, {
-      message: "Can only contains 1 apostrophe and 1 dot per one word",
+      message: "Can contains only 1 apostrophe and 1 dot and 1 hyphen symbol per word",
     })
     .refine((value) => !regex.specialWhitespace.test(value), {
       message: "Wrong spacebar format",
