@@ -113,16 +113,27 @@ const FormModal = (props: FormModalProps) => {
 
   const onSubmit = async (data: z.infer<typeof UserSchema>) => {
     if (props.userData) {
-      console.log("**patch data", data);
-    } else {
       try {
-        const response = await axios.post(
-          "http://localhost:4000/customers",
+        const response = await axios.patch(
+          API_BASE_URL + "/customers/" + props.userData.id,
           data
         );
 
         if (response.status >= 200 && response.status < 300) {
-          console.log(response.data);
+          props.toggle()
+        }
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    } else {
+      try {
+        const response = await axios.post(
+          API_BASE_URL + "/customers",
+          data
+        );
+
+        if (response.status >= 200 && response.status < 300) {
+          props.toggle()
           reset();
         }
       } catch (error) {
