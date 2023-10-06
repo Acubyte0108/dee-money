@@ -120,20 +120,17 @@ const FormModal = (props: FormModalProps) => {
         );
 
         if (response.status >= 200 && response.status < 300) {
-          props.toggle()
+          props.toggle();
         }
       } catch (error) {
         console.log("Error:", error);
       }
     } else {
       try {
-        const response = await axios.post(
-          API_BASE_URL + "/customers",
-          data
-        );
+        const response = await axios.post(API_BASE_URL + "/customers", data);
 
         if (response.status >= 200 && response.status < 300) {
-          props.toggle()
+          props.toggle();
           reset();
         }
       } catch (error) {
