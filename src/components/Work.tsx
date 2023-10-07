@@ -17,27 +17,27 @@ type FetchResult = {
 
 const API_BASE_URL = "http://localhost:4000";
 
+const fetchCustomers = async (page: number = 1) => {
+  const { data, headers } = await axios.get(
+    API_BASE_URL + "/customers?_page=" + page
+  );
+  const lastPageNumber = Number(
+    headers.link.match(/_page=(\d+)>; rel="last"/)[1]
+  );
+
+  const result: FetchResult = {
+    data,
+    lastPageNumber,
+  };
+  return result;
+};
+
 const Example = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [editUser, setEditUser] = useState<Customer | null>(null);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-
-  const fetchCustomers = async (page: number = 1) => {
-    const { data, headers } = await axios.get(
-      API_BASE_URL + "/customers?_page=" + page
-    );
-    const lastPageNumber = Number(
-      headers.link.match(/_page=(\d+)>; rel="last"/)[1]
-    );
-
-    const result: FetchResult = {
-      data,
-      lastPageNumber,
-    };
-    return result;
-  };
 
   const { isLoading, isError, data } = useQuery({
     queryKey: ["customers", page],
@@ -80,9 +80,8 @@ const Example = () => {
     setEditUser(user);
   };
 
-  const handleChangePage = ({selected}) => {
+  const handleChangePage = ({selected}: {selected: number}) => {
     const seletedPage = selected+1
-    console.log('**seleted', seletedPage)
     setPage(seletedPage)
   };
 
@@ -173,26 +172,26 @@ const Example = () => {
             nextLabel={
               <span
                 className="w-10 h-10 flex items-center
-            justify-center bg-gray-200 rounded-md"
+            justify-center hover:bg-gray-200 hover:rounded-md"
               >
                 <BsChevronRight />
               </span>
             }
             onPageChange={handleChangePage}
-            pageRangeDisplayed={7}
+            pageRangeDisplayed={5}
             pageCount={totalPage}
             previousLabel={
               <span
                 className="w-10 h-10 flex items-center
-            justify-center bg-gray-200 rounded-md"
+            justify-center hover:bg-gray-200 hover:rounded-md"
               >
                 <BsChevronLeft />
               </span>
             }
             containerClassName="flex items-center justify-center mt-8 mb-4"
-            pageClassName="block hover:bg-gray-200 w-10 h-10 flex items-center 
-            justify-center rounded-md mx-2"
-            activeClassName="bg-indigo-600 text-white"
+            pageClassName="block bg-transparent w-10 h-10 flex items-center 
+            justify-center hover:border-b hover:border-b-gray-500 mx-2"
+            activeClassName="bg-indigo-600 text-indigo-600 border-b border-b-indigo-600"
           />
         </div>
       </div>
