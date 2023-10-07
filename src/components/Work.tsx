@@ -80,8 +80,10 @@ const Example = () => {
     setEditUser(user);
   };
 
-  const handleChangePage = () => {
-    
+  const handleChangePage = ({selected}) => {
+    const seletedPage = selected+1
+    console.log('**seleted', seletedPage)
+    setPage(seletedPage)
   };
 
   return (
@@ -177,7 +179,7 @@ const Example = () => {
               </span>
             }
             onPageChange={handleChangePage}
-            pageRangeDisplayed={5}
+            pageRangeDisplayed={7}
             pageCount={totalPage}
             previousLabel={
               <span
