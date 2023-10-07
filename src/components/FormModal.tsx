@@ -133,7 +133,7 @@ const FormModal = (props: FormModalProps) => {
     },
     {
       onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: ["customers", page] })
+        await queryClient.invalidateQueries({ queryKey: ["customers", page] }) // check อีกรอบหลังทำ Search
         toggle();
       },
       onError: (error) => {
