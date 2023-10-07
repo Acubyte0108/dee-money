@@ -5,11 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import regex from "../constants/regex";
 import { Customer } from "./Work";
+import { useQueryClient } from "@tanstack/react-query";
 
 const API_BASE_URL = "http://localhost:4000";
 
 type FormModalProps = {
   userData?: Customer;
+  page?: number;
   toggle: () => void;
 };
 
@@ -52,6 +54,8 @@ const UserSchema = z.object({
 const FormModal = (props: FormModalProps) => {
   const [titles, setTitles] = useState<string[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
+
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -120,6 +124,7 @@ const FormModal = (props: FormModalProps) => {
         );
 
         if (response.status >= 200 && response.status < 300) {
+          await queryClient.invalidateQueries(['customer', props.page])
           props.toggle();
         }
       } catch (error) {
@@ -130,8 +135,9 @@ const FormModal = (props: FormModalProps) => {
         const response = await axios.post(API_BASE_URL + "/customers", data);
 
         if (response.status >= 200 && response.status < 300) {
-          props.toggle();
+          await queryClient.invalidateQueries(['customer', props.page])
           reset();
+          props.toggle();
         }
       } catch (error) {
         console.log("Error:", error);
