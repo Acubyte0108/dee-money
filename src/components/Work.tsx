@@ -39,7 +39,7 @@ const Example = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
 
-  const { isLoading, isError, data } = useQuery({
+  const { isLoading, isError, data, refetch } = useQuery({
     queryKey: ["customers", page],
     queryFn: () => fetchCustomers(page),
     keepPreviousData: true,
@@ -55,6 +55,10 @@ const Example = () => {
       setTotalPage(data.lastPageNumber);
     }
   }, [data, isLoading, isError, page]);
+
+  useEffect(() => {
+    refetch()
+  }, [isOpen])
 
   const handleFormModal = () => {
     setIsOpen(!isOpen);
