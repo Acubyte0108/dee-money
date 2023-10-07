@@ -54,7 +54,7 @@ const Example = () => {
       setCustomers(data.data);
       setTotalPage(data.lastPageNumber);
     }
-  }, [data, isLoading, isError, page, isOpen]);
+  }, [data, isLoading, isError, page]);
 
   const handleFormModal = () => {
     setIsOpen(!isOpen);
@@ -172,7 +172,7 @@ const Example = () => {
 
         {isOpen ? (
           editUser ? (
-            <FormModal userData={editUser} toggle={handleFormModal} />
+            <FormModal userData={editUser} page={page} toggle={handleFormModal} />
           ) : (
             <FormModal toggle={handleFormModal} />
           )
