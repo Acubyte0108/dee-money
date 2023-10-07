@@ -69,6 +69,8 @@ const Example = () => {
   const handleChangePage = ({ selected }: { selected: number }) => {
     const seletedPage = selected + 1;
     setPage(seletedPage);
+
+    window.scrollTo(0, 0);
   };
 
   return (
