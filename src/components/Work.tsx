@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import FormModal from "./FormModal";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import ReactPaginate from "react-paginate";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 export type Customer = Record<
   "id" | "firstName" | "lastName" | "title" | "email" | "country",
@@ -9,9 +11,9 @@ export type Customer = Record<
 >;
 
 type FetchResult = {
-  data: Customer[],
-  lastPageNumber: number
-}
+  data: Customer[];
+  lastPageNumber: number;
+};
 
 const API_BASE_URL = "http://localhost:4000";
 
@@ -19,25 +21,29 @@ const Example = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [editUser, setEditUser] = useState<Customer | null>(null);
-  const [page, setPage] = useState(1)
-  const [totalPage, setTotalPage] = useState(1)
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
 
-  const fetchCustomers = async (page:number = 1) => {
-      const { data, headers } = await axios.get(API_BASE_URL + "/customers?_page=" + page);
-      const lastPageNumber = Number(headers.link.match(/_page=(\d+)>; rel="last"/)[1]);
-  
-      const result: FetchResult = {
-        data,
-        lastPageNumber
-      }
-      return result
-  }
+  const fetchCustomers = async (page: number = 1) => {
+    const { data, headers } = await axios.get(
+      API_BASE_URL + "/customers?_page=" + page
+    );
+    const lastPageNumber = Number(
+      headers.link.match(/_page=(\d+)>; rel="last"/)[1]
+    );
+
+    const result: FetchResult = {
+      data,
+      lastPageNumber,
+    };
+    return result;
+  };
 
   const { isLoading, isError, data } = useQuery({
-    queryKey: ['customers', page],
+    queryKey: ["customers", page],
     queryFn: () => fetchCustomers(page),
-    keepPreviousData : true
-  })
+    keepPreviousData: true,
+  });
 
   // useEffect(() => {
   //   // fetch(API_BASE_URL + "/customers")
@@ -55,14 +61,14 @@ const Example = () => {
 
   useEffect(() => {
     if (isLoading) {
-      console.log('Loading...');
+      console.log("Loading...");
     } else if (isError) {
-      console.log('Error fetching customers');
+      console.log("Error fetching customers");
     } else {
       setCustomers(data.data);
-      setTotalPage(data.lastPageNumber)
+      setTotalPage(data.lastPageNumber);
     }
-  }, [data, isLoading, isError, isOpen]);
+  }, [data, isLoading, isError, page, isOpen]);
 
   const handleFormModal = () => {
     setIsOpen(!isOpen);
@@ -72,6 +78,10 @@ const Example = () => {
   const handleEditUser = (user: Customer) => {
     setIsOpen(true);
     setEditUser(user);
+  };
+
+  const handleChangePage = () => {
+    
   };
 
   return (
@@ -154,6 +164,35 @@ const Example = () => {
             <FormModal toggle={handleFormModal} />
           )
         ) : null}
+
+        <div>
+          <ReactPaginate
+            breakLabel={<span className="mx-2">...</span>}
+            nextLabel={
+              <span
+                className="w-10 h-10 flex items-center
+            justify-center bg-gray-200 rounded-md"
+              >
+                <BsChevronRight />
+              </span>
+            }
+            onPageChange={handleChangePage}
+            pageRangeDisplayed={5}
+            pageCount={totalPage}
+            previousLabel={
+              <span
+                className="w-10 h-10 flex items-center
+            justify-center bg-gray-200 rounded-md"
+              >
+                <BsChevronLeft />
+              </span>
+            }
+            containerClassName="flex items-center justify-center mt-8 mb-4"
+            pageClassName="block hover:bg-gray-200 w-10 h-10 flex items-center 
+            justify-center rounded-md mx-2"
+            activeClassName="bg-indigo-600 text-white"
+          />
+        </div>
       </div>
     </div>
   );
