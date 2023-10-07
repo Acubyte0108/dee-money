@@ -1,4 +1,4 @@
-import Work from "./Work";
+import Work from "./components/Work";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const queryClient = new QueryClient()
