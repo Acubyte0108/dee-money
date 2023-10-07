@@ -8,40 +8,43 @@ export type Customer = Record<
   string
 >;
 
+type FetchResult = {
+  data: Customer[],
+  lastPageNumber: number
+}
+
 const API_BASE_URL = "http://localhost:4000";
 
 const Example = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [editUser, setEditUser] = useState<Customer | null>(null);
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
 
   const fetchCustomers = async (page:number = 1) => {
-    try {
       const { data, headers } = await axios.get(API_BASE_URL + "/customers?_page=" + page);
-      setCustomers(data)
-      
       const lastPageNumber = Number(headers.link.match(/_page=(\d+)>; rel="last"/)[1]);
-      setTotalPage(lastPageNumber)
-    } catch (error) {
-        console.log("Error:", error);
-    }
+  
+      const result: FetchResult = {
+        data,
+        lastPageNumber
+      }
+      return result
   }
 
-  // const { isLoading, isError, error, data, isFetching, isPreviousData } = useQuery({
-  //   queryKey: ['customers', page],
-  //   queryFn: () => fetchCustomers(page),
-  //   keepPreviousData : true
-  // })
+  const { isLoading, isError, data } = useQuery({
+    queryKey: ['customers', page],
+    queryFn: () => fetchCustomers(page),
+    keepPreviousData : true
+  })
 
-  useEffect(() => {
-    // fetch(API_BASE_URL + "/customers")
-    //   .then((result) => result.json())
-    //   .then((customers) => setCustomers(customers));
-
-    fetchCustomers()
-  }, []);
+  // useEffect(() => {
+  //   // fetch(API_BASE_URL + "/customers")
+  //   //   .then((result) => result.json())
+  //   //   .then((customers) => setCustomers(customers));
+  //   fetchCustomers()
+  // }, []);
 
   // useEffect(() => {
   //   // fetch(API_BASE_URL + "/customers")
@@ -49,6 +52,17 @@ const Example = () => {
   //   //   .then((customers) => setCustomers(customers));
   //   fetchCustomers()
   // }, [isOpen]);
+
+  useEffect(() => {
+    if (isLoading) {
+      console.log('Loading...');
+    } else if (isError) {
+      console.log('Error fetching customers');
+    } else {
+      setCustomers(data.data);
+      setTotalPage(data.lastPageNumber)
+    }
+  }, [data, isLoading, isError, isOpen]);
 
   const handleFormModal = () => {
     setIsOpen(!isOpen);
