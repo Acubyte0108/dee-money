@@ -6,6 +6,8 @@ import axios, { AxiosResponse } from "axios";
 import regex from "../constants/regex";
 import { Customer } from "./Work";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { IconContext } from "react-icons"
+import { ImCancelCircle } from 'react-icons/im'
 
 const API_BASE_URL = "http://localhost:4000";
 
@@ -180,11 +182,16 @@ const FormModal = (props: FormModalProps) => {
       onClick={toggle}
     >
       <div
-        className="bg-white p-6 rounded shadow-lg lg:w-[900px] mx-auto"
+        className="bg-white p-6 rounded shadow-lg lg:w-[900px] mx-auto relative"
         onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
           e.stopPropagation()
         }
       >
+        <div className="flex justify-center items-center w-10 h-10 absolute top-4 right-4 cursor-pointer" onClick={toggle}>
+          <IconContext.Provider value={{ className:"hover:text-red-500" ,size: "1.5rem" }} >
+            <ImCancelCircle />
+          </IconContext.Provider>
+        </div>
         <form className="" onSubmit={handleSubmit(onSubmit)}>
           <div className="pb-12 mt-12">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
