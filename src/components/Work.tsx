@@ -66,14 +66,14 @@ const Example = () => {
     setEditUser(user);
   };
 
-  const handleChangePage = ({selected}: {selected: number}) => {
-    const seletedPage = selected+1
-    setPage(seletedPage)
+  const handleChangePage = ({ selected }: { selected: number }) => {
+    const seletedPage = selected + 1;
+    setPage(seletedPage);
   };
 
   return (
-    <div className="mx-auto max-w-7xl p-6 lg:px-8">
-      <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-7xl p-6 lg:px-8 h-screen">
+      <div className="mx-auto max-w-3xl flex flex-col h-full">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <img src="/deemoney-logo.webp" className="h-8" />
@@ -89,7 +89,7 @@ const Example = () => {
           </div>
         </div>
 
-        <div className="-mx-4 mt-8 sm:-mx-0">
+        <div className="-mx-4 mt-8 sm:-mx-0 flex flex-col justify-between items-center h-full">
           <table className="min-w-full divide-y divide-gray-300">
             <thead>
               <tr>
@@ -142,6 +142,32 @@ const Example = () => {
               ))}
             </tbody>
           </table>
+
+          <div>
+            <ReactPaginate
+              breakLabel={<span className="mx-2">...</span>}
+              nextLabel={
+                <span
+                  className="w-10 h-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-md"
+                >
+                  <BsChevronRight />
+                </span>
+              }
+              onPageChange={handleChangePage}
+              pageRangeDisplayed={5}
+              pageCount={totalPage}
+              previousLabel={
+                <span
+                  className="w-10 h-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-md"
+                >
+                  <BsChevronLeft />
+                </span>
+              }
+              containerClassName="flex items-center justify-center mt-8 mb-4"
+              pageClassName="block bg-transparent w-10 h-10 flex items-center justify-center hover:border-b hover:border-b-gray-500 mx-2"
+              activeClassName="text-indigo-600 border-b border-b-indigo-600"
+            />
+          </div>
         </div>
 
         {isOpen ? (
@@ -151,35 +177,6 @@ const Example = () => {
             <FormModal toggle={handleFormModal} />
           )
         ) : null}
-
-        <div>
-          <ReactPaginate
-            breakLabel={<span className="mx-2">...</span>}
-            nextLabel={
-              <span
-                className="w-10 h-10 flex items-center
-            justify-center hover:bg-gray-200 hover:rounded-md"
-              >
-                <BsChevronRight />
-              </span>
-            }
-            onPageChange={handleChangePage}
-            pageRangeDisplayed={5}
-            pageCount={totalPage}
-            previousLabel={
-              <span
-                className="w-10 h-10 flex items-center
-            justify-center hover:bg-gray-200 hover:rounded-md"
-              >
-                <BsChevronLeft />
-              </span>
-            }
-            containerClassName="flex items-center justify-center mt-8 mb-4"
-            pageClassName="block bg-transparent w-10 h-10 flex items-center 
-            justify-center hover:border-b hover:border-b-gray-500 mx-2"
-            activeClassName="text-indigo-600 border-b border-b-indigo-600"
-          />
-        </div>
       </div>
     </div>
   );
