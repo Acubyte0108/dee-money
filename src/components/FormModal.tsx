@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import regex from "../constants/regex";
-import { Customer } from "../Work";
+import { Customer } from "./Work";
 
 const API_BASE_URL = "http://localhost:4000";
 
