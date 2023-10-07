@@ -55,8 +55,8 @@ type TUserSchema = z.infer<typeof UserSchema>
 
 const FormModal = (props: FormModalProps) => {
   const [titles, setTitles] = useState<string[]>([]);
-  const [countries, setCountries] = useState<string[]>([]);
-
+  const [countries, setCountries] = useState<string[]>([]); 
+  const { userData, page, toggle } = props
   const queryClient = useQueryClient();
 
   const {
@@ -91,10 +91,10 @@ const FormModal = (props: FormModalProps) => {
   useEffect(() => {
     getOptionsData();
 
-    if (props.userData) {
-      setValue("firstName", props.userData.firstName);
-      setValue("lastName", props.userData.lastName);
-      setValue("email", props.userData.email);
+    if (userData) {
+      setValue("firstName", userData.firstName);
+      setValue("lastName", userData.lastName);
+      setValue("email", userData.email);
     }
 
     document.body.style.overflow = "hidden";
@@ -107,20 +107,20 @@ const FormModal = (props: FormModalProps) => {
   }, []);
 
   useEffect(() => {
-    if (!props.userData && countries.length > 0) {
+    if (!userData && countries.length > 0) {
       setValue("title", titles[0]);
       setValue("country", countries[0]);
-    } else if (props.userData && countries.length > 0) {
-      setValue("title", props.userData.title);
-      setValue("country", props.userData.country);
+    } else if (userData && countries.length > 0) {
+      setValue("title", userData.title);
+      setValue("country", userData.country);
     }
   }, [titles, countries]);
 
   const mutation = useMutation<AxiosResponse, Error, TUserSchema>(
     async (data: TUserSchema) => {
-      if (props.userData) {
+      if (userData) {
         const response = await axios.patch(
-          API_BASE_URL + "/customers/" + props.userData.id,
+          API_BASE_URL + "/customers/" + userData.id,
           data
         );
         return response;
@@ -131,8 +131,8 @@ const FormModal = (props: FormModalProps) => {
     },
     {
       onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: ["customers", props.page] })
-        props.toggle();
+        await queryClient.invalidateQueries({ queryKey: ["customers", page] })
+        toggle();
       },
       onError: (error) => {
         console.log("Error:", error);
@@ -141,17 +141,17 @@ const FormModal = (props: FormModalProps) => {
   );
 
   const onSubmit = async (data: TUserSchema) => {
-    // if (props.userData) {
+    // if (userData) {
     //   try {
     //     const response = await axios.patch(
-    //       API_BASE_URL + "/customers/" + props.userData.id,
+    //       API_BASE_URL + "/customers/" + userData.id,
     //       data
     //     );
 
     //     if (response.status >= 200 && response.status < 300) {
-    //       // await queryClient.invalidateQueries(['customer', props.page])
+    //       // await queryClient.invalidateQueries(['customer', page])
     //       await queryClient.refetchQueries()
-    //       props.toggle();
+    //       toggle();
     //     }
     //   } catch (error) {
     //     console.log("Error:", error);
@@ -161,10 +161,10 @@ const FormModal = (props: FormModalProps) => {
     //     const response = await axios.post(API_BASE_URL + "/customers", data);
 
     //     if (response.status >= 200 && response.status < 300) {
-    //       // await queryClient.invalidateQueries(['customer', props.page])
+    //       // await queryClient.invalidateQueries(['customer', page])
     //       await queryClient.refetchQueries()
     //       reset();
-    //       props.toggle();
+    //       toggle();
     //     }
     //   } catch (error) {
     //     console.log("Error:", error);
@@ -177,7 +177,7 @@ const FormModal = (props: FormModalProps) => {
   return (
     <div
       className="fixed bg-gray-800 bg-opacity-75 inset-0 flex items-center justify-center z-10"
-      onClick={props.toggle}
+      onClick={toggle}
     >
       <div
         className="bg-white p-6 rounded shadow-lg lg:w-[900px] mx-auto"
@@ -188,7 +188,7 @@ const FormModal = (props: FormModalProps) => {
         <form className="" onSubmit={handleSubmit(onSubmit)}>
           <div className="pb-12 mt-12">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
-              {props.userData ? `Edit Customer` : `Add Customer`}
+              {userData ? `Edit Customer` : `Add Customer`}
             </h2>
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
