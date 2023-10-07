@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import regex from "../constants/regex";
 import { Customer } from "./Work";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 const API_BASE_URL = "http://localhost:4000";
 
@@ -51,6 +51,8 @@ const UserSchema = z.object({
   country: z.string().min(1, "Please select country"),
 });
 
+type TUserSchema = z.infer<typeof UserSchema>
+
 const FormModal = (props: FormModalProps) => {
   const [titles, setTitles] = useState<string[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
@@ -60,10 +62,9 @@ const FormModal = (props: FormModalProps) => {
   const {
     register,
     handleSubmit,
-    reset,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<z.infer<typeof UserSchema>>({
+  } = useForm<TUserSchema>({
     resolver: zodResolver(UserSchema),
   });
 
@@ -115,34 +116,62 @@ const FormModal = (props: FormModalProps) => {
     }
   }, [titles, countries]);
 
-  const onSubmit = async (data: z.infer<typeof UserSchema>) => {
-    if (props.userData) {
-      try {
+  const mutation = useMutation<AxiosResponse, Error, TUserSchema>(
+    async (data: TUserSchema) => {
+      if (props.userData) {
         const response = await axios.patch(
           API_BASE_URL + "/customers/" + props.userData.id,
           data
         );
-
-        if (response.status >= 200 && response.status < 300) {
-          await queryClient.invalidateQueries(['customer', props.page])
-          props.toggle();
-        }
-      } catch (error) {
-        console.log("Error:", error);
-      }
-    } else {
-      try {
+        return response;
+      } else {
         const response = await axios.post(API_BASE_URL + "/customers", data);
-
-        if (response.status >= 200 && response.status < 300) {
-          await queryClient.invalidateQueries(['customer', props.page])
-          reset();
-          props.toggle();
-        }
-      } catch (error) {
-        console.log("Error:", error);
+        return response;
       }
+    },
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ["customers", props.page] })
+        props.toggle();
+      },
+      onError: (error) => {
+        console.log("Error:", error);
+      },
     }
+  );
+
+  const onSubmit = async (data: TUserSchema) => {
+    // if (props.userData) {
+    //   try {
+    //     const response = await axios.patch(
+    //       API_BASE_URL + "/customers/" + props.userData.id,
+    //       data
+    //     );
+
+    //     if (response.status >= 200 && response.status < 300) {
+    //       // await queryClient.invalidateQueries(['customer', props.page])
+    //       await queryClient.refetchQueries()
+    //       props.toggle();
+    //     }
+    //   } catch (error) {
+    //     console.log("Error:", error);
+    //   }
+    // } else {
+    //   try {
+    //     const response = await axios.post(API_BASE_URL + "/customers", data);
+
+    //     if (response.status >= 200 && response.status < 300) {
+    //       // await queryClient.invalidateQueries(['customer', props.page])
+    //       await queryClient.refetchQueries()
+    //       reset();
+    //       props.toggle();
+    //     }
+    //   } catch (error) {
+    //     console.log("Error:", error);
+    //   }
+    // }
+
+    mutation.mutate(data)
   };
 
   return (
