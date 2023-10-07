@@ -45,20 +45,6 @@ const Example = () => {
     keepPreviousData: true,
   });
 
-  // useEffect(() => {
-  //   // fetch(API_BASE_URL + "/customers")
-  //   //   .then((result) => result.json())
-  //   //   .then((customers) => setCustomers(customers));
-  //   fetchCustomers()
-  // }, []);
-
-  // useEffect(() => {
-  //   // fetch(API_BASE_URL + "/customers")
-  //   //   .then((result) => result.json())
-  //   //   .then((customers) => setCustomers(customers));
-  //   fetchCustomers()
-  // }, [isOpen]);
-
   useEffect(() => {
     if (isLoading) {
       console.log("Loading...");
@@ -191,7 +177,7 @@ const Example = () => {
             containerClassName="flex items-center justify-center mt-8 mb-4"
             pageClassName="block bg-transparent w-10 h-10 flex items-center 
             justify-center hover:border-b hover:border-b-gray-500 mx-2"
-            activeClassName="bg-indigo-600 text-indigo-600 border-b border-b-indigo-600"
+            activeClassName="text-indigo-600 border-b border-b-indigo-600"
           />
         </div>
       </div>
