@@ -33,28 +33,52 @@ const fetchCustomers = async (page: number = 1) => {
   return result;
 };
 
+const searchCustomers = async (text: string) => {
+  const { data } = await axios.get(
+    API_BASE_URL + "/customers?q=" + text
+  );
+  return data;
+};
+
 const Example = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [editUser, setEditUser] = useState<Customer | null>(null);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+  const [text, setText] = useState('')
 
-  const { isLoading, isError, isSuccess, data } = useQuery({
+  const { isLoading: isLoadingSearch, isError: isErrorSearch, isSuccess: isSuccessSearch, data: fetchSearch } = useQuery({
+    queryKey: ["search", text],
+    queryFn: () => searchCustomers(text),
+    enabled: !!text
+  });
+
+  const { isLoading: isLoadingFetch, isError: isErrorFetch, isSuccess: isSuccessFetch, data: fetchData } = useQuery({
     queryKey: ["customers", page],
     queryFn: () => fetchCustomers(page),
     keepPreviousData: true,
+    enabled: text === ''
   });
 
   useEffect(() => {
-    if(isError) {
+    if(isErrorFetch) {
       setCustomers([])
     }
-    else if (isSuccess) {
-      setCustomers(data.data);
-      setTotalPage(data.lastPageNumber);  
+    else if (isSuccessFetch) {
+      setCustomers(fetchData.data);
+      setTotalPage(fetchData.lastPageNumber);  
     }
-  }, [data, isLoading, isError]);
+  }, [fetchData, isLoadingFetch, isErrorFetch, isSuccessFetch]);
+
+  useEffect(() => {
+    if(isErrorSearch) {
+      setCustomers([])
+    }
+    else if (isSuccessSearch) {
+      setCustomers(fetchSearch);
+    }
+  }, [fetchSearch, isLoadingSearch, isErrorSearch, isSuccessSearch]);
 
   const handleFormModal = () => {
     setIsOpen(!isOpen);
@@ -90,15 +114,26 @@ const Example = () => {
             </button>
           </div>
         </div>
+        <div className="flex justify-center items-center mt-4 gap-4">
+          <span className="text-lg">Search:</span>
+          <input 
+            id="search-customers"
+            className="block w-full rounded-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="name, email, title, country"
+            autoComplete="off"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+        </div>
 
-        <div className="-mx-4 mt-8 sm:-mx-0 flex flex-col justify-between items-center h-full">
-          {isLoading && (
+        <div className="-mx-4 mt-4 sm:-mx-0 flex flex-col justify-between items-center h-full">
+          {isLoadingFetch && (
             <div className="my-auto text-lg">
               ...Loading
             </div>
           )}
 
-          {isError && (
+          {isErrorFetch && (
             <div className="my-auto text-lg text-red-600 w-full text-center py-10 rounded-md bg-red-100">
               Failed to fetch customers list
             </div>
@@ -106,7 +141,7 @@ const Example = () => {
 
           {customers.length > 0 && (<CustomersTable customers={customers} handleEditUser={handleEditUser}/>)}
 
-          {totalPage !== 0 && (<div>
+          {totalPage !== 0 && text === '' && (<div>
             <ReactPaginate
               breakLabel={<span className="sm:mx-2 mx-0.5">...</span>}
               nextLabel={
@@ -119,7 +154,7 @@ const Example = () => {
               onPageChange={handleChangePage}
               pageRangeDisplayed={3}
               marginPagesDisplayed={1}
-              pageCount={50}
+              pageCount={totalPage}
               previousLabel={
                 <span
                   className="w-10 h-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-md"
