@@ -38,7 +38,7 @@ const Example = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [editUser, setEditUser] = useState<Customer | null>(null);
   const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
 
   const { isLoading, isError, data } = useQuery({
     queryKey: ["customers", page],
@@ -93,9 +93,21 @@ const Example = () => {
         </div>
 
         <div className="-mx-4 mt-8 sm:-mx-0 flex flex-col justify-between items-center h-full">
-          <CustomersTable customers={customers} handleEditUser={handleEditUser}/>
+          {isLoading && (
+            <div className="my-auto text-lg">
+              ...Loading
+            </div>
+          )}
 
-          <div>
+          {isError && (
+            <div className="my-auto text-lg text-red-600 w-full text-center py-10 rounded-md bg-red-100">
+              Failed to fetch customers list
+            </div>
+          )}
+
+          {customers.length > 0 && (<CustomersTable customers={customers} handleEditUser={handleEditUser}/>)}
+
+          {totalPage !== 0 && (<div>
             <ReactPaginate
               breakLabel={<span className="mx-2">...</span>}
               nextLabel={
@@ -120,6 +132,7 @@ const Example = () => {
               activeClassName="text-indigo-600 border-b border-b-indigo-600"
             />
           </div>
+          )}  
         </div>
 
         {isOpen ? (
