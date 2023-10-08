@@ -6,10 +6,11 @@ import { FaPen, FaTrashAlt } from 'react-icons/fa'
 type CustomersTableProps = {
   customers: Customer[];
   handleEditUser: (person: Customer) => void;
+  handleDeleteUser: (id: string) => void
 };
 
 const CustomersTable = (props: CustomersTableProps) => {
-  const { customers, handleEditUser } = props;
+  const { customers, handleEditUser, handleDeleteUser } = props;
 
   const isBigScreen = useMediaQuery({ query: "(min-width: 640px)" });
   const isMobileScreen = useMediaQuery({ query: "(max-width: 639px)" });
@@ -69,7 +70,7 @@ const CustomersTable = (props: CustomersTableProps) => {
                         <FaPen />
                       </IconContext.Provider>
                     </span>
-                    <span className="cursor-pointer">
+                    <span className="cursor-pointer" onClick={() => handleDeleteUser(person.id)}>
                       <IconContext.Provider value={{ className:"text-red-500" ,size: "1rem" }} >
                         <FaTrashAlt />
                       </IconContext.Provider>
