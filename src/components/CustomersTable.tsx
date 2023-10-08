@@ -73,22 +73,30 @@ const CustomersTable = (props: CustomersTableProps) => {
             <span className="text-md font-medium">Customers List</span>
           </div>
           <div className="flex flex-col">
-          {customers.map((person, i) => (
-            <div className="flex flex-col py-3 border-b-2 border-b-grey-300">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">Test Last-Test</span>
-                <span className="text-sm font-medium">test.last@gmail.com</span>
+            {customers.map((person, i) => (
+              <div
+                key={i}
+                className="flex justify-between py-3 border-b-2 border-b-grey-300"
+              >
+                <div className="flex flex-col">
+                  <div className="text-sm font-medium">
+                    {person.firstName} {person.lastName} <br />
+                    {person.email}
+                  </div>
+                  <div className="text-xs">
+                    {person.title} <br /> {person.country}
+                  </div>
+                </div>
+                <div className="flex justify-center items-center">
+                  <div
+                    className="text-sm font-medium text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                    onClick={() => handleEditUser(person)}
+                  >
+                    Edit
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-between items-end">
-                <span className="text-xs">
-                  Legacy Response Producer <br /> Cambodia
-                </span>
-                <span className="text-sm font-medium text-indigo-600 hover:text-indigo-900 cursor-pointer">
-                  Edit
-                </span>
-              </div>
-            </div>
-          ))}
+            ))}
           </div>
         </div>
       )}
