@@ -143,36 +143,6 @@ const FormModal = (props: FormModalProps) => {
   );
 
   const onSubmit = async (data: TUserSchema) => {
-    // if (userData) {
-    //   try {
-    //     const response = await axios.patch(
-    //       API_BASE_URL + "/customers/" + userData.id,
-    //       data
-    //     );
-
-    //     if (response.status >= 200 && response.status < 300) {
-    //       // await queryClient.invalidateQueries(['customer', page])
-    //       await queryClient.refetchQueries()
-    //       toggle();
-    //     }
-    //   } catch (error) {
-    //     console.log("Error:", error);
-    //   }
-    // } else {
-    //   try {
-    //     const response = await axios.post(API_BASE_URL + "/customers", data);
-
-    //     if (response.status >= 200 && response.status < 300) {
-    //       // await queryClient.invalidateQueries(['customer', page])
-    //       await queryClient.refetchQueries()
-    //       reset();
-    //       toggle();
-    //     }
-    //   } catch (error) {
-    //     console.log("Error:", error);
-    //   }
-    // }
-
     mutation.mutate(data)
   };
 
