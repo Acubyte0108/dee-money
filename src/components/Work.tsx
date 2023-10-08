@@ -124,8 +124,8 @@ const Example = () => {
                 </span>
               }
               containerClassName="flex items-center justify-center mt-8 mb-4"
-              pageClassName="block bg-transparent w-10 h-10 flex items-center justify-center hover:border-b hover:border-b-gray-500 mx-2"
-              activeClassName="text-indigo-600 border-b border-b-indigo-600"
+              pageClassName="block font-medium bg-transparent w-10 h-10 flex items-center justify-center hover:border-b-2 hover:border-b-2-gray-500 mx-2"
+              activeClassName="text-indigo-600 border-b-2 border-b-indigo-600"
             />
           </div>
           )}  
