@@ -43,7 +43,7 @@ const UserSchema = z.object({
       message: "First character must be capitalized and not symbols",
     })
     .regex(regex.containsOneSymbol, {
-      message: "Can contains only 1 apostrophe and 1 dot and 1 hyphen symbol per word",
+      message: "Can contains only 1 of these ( ' . - ) symbol per word",
     })
     .refine((value) => !regex.specialWhitespace.test(value), {
       message: "Wrong spacebar format",
@@ -182,7 +182,7 @@ const FormModal = (props: FormModalProps) => {
       onClick={toggle}
     >
       <div
-        className="bg-white p-6 rounded shadow-lg lg:w-[900px] mx-auto relative"
+        className="bg-white p-6 rounded shadow-lg lg:w-[900px] mx-auto relative max-sm:w-4/5"
         onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
           e.stopPropagation()
         }
@@ -197,12 +197,12 @@ const FormModal = (props: FormModalProps) => {
           </IconContext.Provider>
         </div>
         <form className="" onSubmit={handleSubmit(onSubmit)}>
-          <div className="pb-12 mt-12">
+          <div className="pb-12 mt-12 max-sm:pb-4 max-sm:mt-4">
             <h2 className="text-xl font-semibold leading-7 text-gray-900">
               {userData ? `Edit Customer` : `Add Customer`}
             </h2>
 
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 max-w-xs:gap-y-2 sm:grid-cols-6">
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 max-sm:gap-y-2 sm:grid-cols-6">
               <div className="sm:col-span-3">
                 <label
                   htmlFor="first-name"
@@ -318,7 +318,7 @@ const FormModal = (props: FormModalProps) => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold w-full sm:w-fit text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="block rounded-md bg-indigo-600 px-3 py-2 max-sm:mt-4 text-center text-sm font-semibold w-full sm:w-fit text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Submit
                 </button>
