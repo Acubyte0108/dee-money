@@ -5,7 +5,7 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 const API_BASE_URL = "http://localhost:4000";
 
 type DeletePopupProps = {
-  customerId?: string;
+  customerId: string;
   toggle: () => void;
 };
 
@@ -13,7 +13,7 @@ const DeletePopup = (props: DeletePopupProps) => {
   const { customerId, toggle } = props;
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<AxiosResponse, Error, string | undefined>(
+  const mutation = useMutation<AxiosResponse, Error, string>(
     async (customerId) => {
       const response = await axios.delete(
         API_BASE_URL + "/customers/" + customerId
@@ -45,7 +45,7 @@ const DeletePopup = (props: DeletePopupProps) => {
 
   return (<div className="fixed bg-gray-800 bg-opacity-75 inset-0 flex items-center justify-center z-10" onClick={toggle}>
             <div className="bg-white p-6 rounded shadow-lg sm:w-[500px] sm:h-[500px] mx-auto" onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation()}>
-                DeletePopup
+                {`Delete ${customerId}`}
             </div>
         </div>) 
 };
