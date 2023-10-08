@@ -42,22 +42,22 @@ const Example = () => {
   const [totalPage, setTotalPage] = useState(0);
   const [text, setText] = useState('')
 
-  const { isLoading: isLoadingFetch, isError: isErrorFetch, isSuccess: isSuccessFetch, data: fetchData } = useQuery({
+  const { isLoading, isError, isSuccess, data } = useQuery({
     queryKey: ["customers", text, page],
     queryFn: () => fetchCustomers(text, page),
     keepPreviousData: true,
   });
 
   useEffect(() => {
-    if(isErrorFetch) {
+    if(isError) {
       setCustomers([])
       setTotalPage(0);  
     }
-    else if (isSuccessFetch) {
-      setCustomers(fetchData.data);
-      setTotalPage(fetchData.lastPageNumber);
+    else if (isSuccess) {
+      setCustomers(data.data);
+      setTotalPage(data.lastPageNumber);
     }
-  }, [fetchData, isLoadingFetch, isErrorFetch, isSuccessFetch]);
+  }, [isLoading, isError, isSuccess, data]);
 
   useEffect(() => {
     setPage(1)
@@ -109,13 +109,13 @@ const Example = () => {
         </div>
 
         <div className="-mx-4 mt-4 sm:-mx-0 flex flex-col justify-between items-center h-full">
-          {isLoadingFetch && (
+          {isLoading && (
             <div className="my-auto text-lg">
               ...Loading
             </div>
           )}
 
-          {isErrorFetch && (
+          {isError && (
             <div className="my-auto text-lg text-red-600 w-full text-center py-10 rounded-md bg-red-100">
               Failed to fetch customers list
             </div>
