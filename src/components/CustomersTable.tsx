@@ -79,21 +79,21 @@ const CustomersTable = (props: CustomersTableProps) => {
                 className="flex justify-between py-3 border-b-2 border-b-grey-300"
               >
                 <div className="flex flex-col">
-                  <div className="text-sm font-medium">
+                  <span className="text-sm font-medium">
                     {person.firstName} {person.lastName} <br />
                     {person.email}
-                  </div>
-                  <div className="text-xs">
+                  </span>
+                  <span className="text-xs">
                     {person.title} <br /> {person.country}
-                  </div>
+                  </span>
                 </div>
                 <div className="flex justify-center items-center">
-                  <div
+                  <span
                     className="text-sm font-medium text-indigo-600 hover:text-indigo-900 cursor-pointer"
                     onClick={() => handleEditUser(person)}
                   >
                     Edit
-                  </div>
+                  </span>
                 </div>
               </div>
             ))}
