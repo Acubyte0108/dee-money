@@ -167,7 +167,7 @@ const FormModal = (props: FormModalProps) => {
           </IconContext.Provider>
         </div>
         <form className="" onSubmit={handleSubmit(onSubmit)}>
-          <div className="pb-12 mt-12 max-sm:pb-4 max-sm:mt-4">
+          <div className="pb-12 mt-12 max-sm:pb-0 max-sm:mt-0">
             <h2 className="text-xl font-semibold leading-7 text-gray-900">
               {userData ? `Edit Customer` : `Add Customer`}
             </h2>

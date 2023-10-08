@@ -77,11 +77,11 @@ const Example = () => {
   return (
     <div className="mx-auto max-w-7xl p-6 lg:px-8 h-screen">
       <div className="mx-auto max-w-3xl flex flex-col h-full">
-        <div className="sm:flex sm:items-center">
+        <div className="flex justify-between items-center">
           <div className="sm:flex-auto">
             <img src="/deemoney-logo.webp" className="h-8" />
           </div>
-          <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+          <div className="sm:ml-16 sm:mt-4 sm:flex-none">
             <button
               type="button"
               className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
