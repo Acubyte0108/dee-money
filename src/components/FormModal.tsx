@@ -161,7 +161,7 @@ const FormModal = (props: FormModalProps) => {
             Failed to summit the form
           </div>
         )}
-        <div className="flex justify-center items-center w-10 h-10 absolute top-4 right-4 cursor-pointer" onClick={toggle}>
+        <div className="flex justify-center items-center w-10 h-10 absolute sm:top-4 sm:right-4 top-2 right-2 cursor-pointer" onClick={toggle}>
           <IconContext.Provider value={{ className:"hover:text-red-500" ,size: "1.5rem" }} >
             <ImCancelCircle />
           </IconContext.Provider>
