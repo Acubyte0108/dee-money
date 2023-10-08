@@ -67,6 +67,31 @@ const CustomersTable = (props: CustomersTableProps) => {
           </tbody>
         </table>
       )}
+      {isMobileScreen && (
+        <div className="w-[90%]">
+          <div className="flex items-center border-b-2 border-b-grey-300 pb-3">
+            <span className="text-md font-medium">Customers List</span>
+          </div>
+          <div className="flex flex-col">
+          {customers.map((person, i) => (
+            <div className="flex flex-col py-3 border-b-2 border-b-grey-300">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium">Test Last-Test</span>
+                <span className="text-sm font-medium">test.last@gmail.com</span>
+              </div>
+              <div className="flex justify-between items-end">
+                <span className="text-xs">
+                  Legacy Response Producer <br /> Cambodia
+                </span>
+                <span className="text-sm font-medium text-indigo-600 hover:text-indigo-900 cursor-pointer">
+                  Edit
+                </span>
+              </div>
+            </div>
+          ))}
+          </div>
+        </div>
+      )}
     </>
   );
 };
