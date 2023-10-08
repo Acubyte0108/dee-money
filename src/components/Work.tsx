@@ -94,7 +94,7 @@ const Example = () => {
         <div className="-mx-4 mt-8 sm:-mx-0 flex flex-col justify-between items-center h-full">
           {isLoading && (
             <div className="my-auto text-lg">
-              Loading
+              ...Loading
             </div>
           )}
 
@@ -108,7 +108,7 @@ const Example = () => {
 
           {totalPage !== 0 && (<div>
             <ReactPaginate
-              breakLabel={<span className="mx-2">...</span>}
+              breakLabel={<span className="sm:mx-2 mx-0.5">...</span>}
               nextLabel={
                 <span
                   className="w-10 h-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-md"
@@ -118,7 +118,8 @@ const Example = () => {
               }
               onPageChange={handleChangePage}
               pageRangeDisplayed={3}
-              pageCount={totalPage}
+              marginPagesDisplayed={1}
+              pageCount={50}
               previousLabel={
                 <span
                   className="w-10 h-10 flex items-center justify-center hover:bg-gray-200 hover:rounded-md"
@@ -127,7 +128,7 @@ const Example = () => {
                 </span>
               }
               containerClassName="flex items-center justify-center mt-8 mb-4"
-              pageClassName="block font-medium bg-transparent w-10 h-10 flex items-center justify-center hover:border-b-2 hover:border-b-2-gray-500 sm:mx-2"
+              pageClassName="block font-medium bg-transparent w-10 h-10 flex items-center justify-center hover:border-b-2 hover:border-b-2-gray-500 sm:mx-2 mx-0.5"
               activeClassName="text-indigo-600 border-b-2 border-b-indigo-600"
             />
           </div>
