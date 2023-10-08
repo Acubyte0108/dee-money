@@ -6,7 +6,6 @@ import ReactPaginate from "react-paginate";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import CustomersTable from "./CustomersTable";
 import { IconContext } from "react-icons"
-import { GrClearOption } from 'react-icons/gr'
 import { AiOutlineClear } from 'react-icons/ai'
 
 export type Customer = Record<
