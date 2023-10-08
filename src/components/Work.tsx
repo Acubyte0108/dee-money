@@ -47,7 +47,10 @@ const Example = () => {
   });
 
   useEffect(() => {
-    if (isSuccess) {
+    if(isError) {
+      setCustomers([])
+    }
+    else if (isSuccess) {
       setCustomers(data.data);
       setTotalPage(data.lastPageNumber);  
     }
