@@ -1,5 +1,7 @@
 import { Customer } from "./Work";
 import { useMediaQuery } from "react-responsive";
+import { IconContext } from "react-icons"
+import { FaPen, FaTrashAlt } from 'react-icons/fa'
 
 type CustomersTableProps = {
   customers: Customer[];
@@ -55,12 +57,24 @@ const CustomersTable = (props: CustomersTableProps) => {
                   {person.email}
                 </td>
                 <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                  <span
+                  {/* <span
                     className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
                     onClick={() => handleEditUser(person)}
                   >
                     Edit
-                  </span>
+                  </span> */}
+                  <div className="flex justify-center items-center gap-x-8">
+                    <span className="cursor-pointer" onClick={() => handleEditUser(person)}>
+                      <IconContext.Provider value={{ className:"text-indigo-600" ,size: "1rem" }} >
+                        <FaPen />
+                      </IconContext.Provider>
+                    </span>
+                    <span className="cursor-pointer">
+                      <IconContext.Provider value={{ className:"text-red-500" ,size: "1rem" }} >
+                        <FaTrashAlt />
+                      </IconContext.Provider>
+                    </span>
+                  </div>
                 </td>
               </tr>
             ))}
