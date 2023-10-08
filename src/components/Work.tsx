@@ -7,6 +7,7 @@ import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import CustomersTable from "./CustomersTable";
 import { IconContext } from "react-icons"
 import { AiOutlineClear } from 'react-icons/ai'
+import DeletePopup from "./DeletePopup";
 
 export type Customer = Record<
   "id" | "firstName" | "lastName" | "title" | "email" | "country",
@@ -43,6 +44,8 @@ const Example = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [text, setText] = useState('')
+  const [isDelete, setIsDelete] = useState(false)
+  const [deleteId, setDeleteId] = useState('');
 
   const { isLoading, isError, isSuccess, data } = useQuery({
     queryKey: ["customers", text, page],
@@ -80,6 +83,16 @@ const Example = () => {
     setPage(seletedPage);
     window.scrollTo(0, 0);
   };
+
+  const handleDeletePopup = () => {
+    setIsDelete(!isDelete)
+    setDeleteId('');
+  }
+
+  const handleDeleteUser = (id: string) => {
+    setIsDelete(!isDelete)
+    setDeleteId(id);
+  }
 
   return (
     <div className="mx-auto max-w-7xl p-6 lg:px-8 h-screen">
@@ -127,7 +140,7 @@ const Example = () => {
             </div>
           )}
 
-          {customers.length > 0 && (<CustomersTable customers={customers} handleEditUser={handleEditUser}/>)}
+          {customers.length > 0 && (<CustomersTable customers={customers} handleEditUser={handleEditUser} handleDeleteUser={handleDeleteUser}/>)}
 
           {totalPage !== 0 && (<div>
             <ReactPaginate
@@ -166,6 +179,8 @@ const Example = () => {
             <FormModal toggle={handleFormModal} />
           )
         ) : null}
+
+        {isDelete && (<DeletePopup customerId={deleteId} toggle={handleDeletePopup}/>) }
       </div>
     </div>
   );
