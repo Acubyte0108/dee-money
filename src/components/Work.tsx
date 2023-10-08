@@ -40,20 +40,16 @@ const Example = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
 
-  const { isLoading, isError, data } = useQuery({
+  const { isLoading, isError, isSuccess, data } = useQuery({
     queryKey: ["customers", page],
     queryFn: () => fetchCustomers(page),
     keepPreviousData: true,
   });
 
   useEffect(() => {
-    if (isLoading) {
-      console.log("Loading...");
-    } else if (isError) {
-      console.log("Error fetching customers");
-    } else {
+    if (isSuccess) {
       setCustomers(data.data);
-      setTotalPage(data.lastPageNumber);
+      setTotalPage(data.lastPageNumber);  
     }
   }, [data, isLoading, isError]);
 
