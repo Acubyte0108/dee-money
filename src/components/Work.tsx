@@ -18,26 +18,20 @@ type FetchResult = {
 
 const API_BASE_URL = "http://localhost:4000";
 
-const fetchCustomers = async (page: number = 1) => {
+const fetchCustomers = async (text:string, page: number = 1) => {
   const { data, headers } = await axios.get(
-    API_BASE_URL + "/customers?_page=" + page
-  );
-  const lastPageNumber = Number(
-    headers.link.match(/_page=(\d+)>; rel="last"/)[1]
+    API_BASE_URL + `/customers?q=${text}&_page=${page}`
   );
 
+  const headersLink = headers.link
+  const lastPageNumber = !!headersLink ? Number(
+    headersLink.match(/_page=(\d+)>; rel="last"/)[1]
+  ) : 1;
   const result: FetchResult = {
     data,
     lastPageNumber,
   };
   return result;
-};
-
-const searchCustomers = async (text: string) => {
-  const { data } = await axios.get(
-    API_BASE_URL + "/customers?q=" + text
-  );
-  return data;
 };
 
 const Example = () => {
@@ -48,37 +42,26 @@ const Example = () => {
   const [totalPage, setTotalPage] = useState(0);
   const [text, setText] = useState('')
 
-  const { isLoading: isLoadingSearch, isError: isErrorSearch, isSuccess: isSuccessSearch, data: fetchSearch } = useQuery({
-    queryKey: ["search", text],
-    queryFn: () => searchCustomers(text),
-    enabled: !!text
-  });
-
   const { isLoading: isLoadingFetch, isError: isErrorFetch, isSuccess: isSuccessFetch, data: fetchData } = useQuery({
-    queryKey: ["customers", page],
-    queryFn: () => fetchCustomers(page),
+    queryKey: ["customers", text, page],
+    queryFn: () => fetchCustomers(text, page),
     keepPreviousData: true,
-    enabled: text === ''
   });
 
   useEffect(() => {
     if(isErrorFetch) {
       setCustomers([])
+      setTotalPage(0);  
     }
     else if (isSuccessFetch) {
       setCustomers(fetchData.data);
-      setTotalPage(fetchData.lastPageNumber);  
+      setTotalPage(fetchData.lastPageNumber);
     }
   }, [fetchData, isLoadingFetch, isErrorFetch, isSuccessFetch]);
 
   useEffect(() => {
-    if(isErrorSearch) {
-      setCustomers([])
-    }
-    else if (isSuccessSearch) {
-      setCustomers(fetchSearch);
-    }
-  }, [fetchSearch, isLoadingSearch, isErrorSearch, isSuccessSearch]);
+    setPage(1)
+  }, [text])
 
   const handleFormModal = () => {
     setIsOpen(!isOpen);
@@ -93,7 +76,6 @@ const Example = () => {
   const handleChangePage = ({ selected }: { selected: number }) => {
     const seletedPage = selected + 1;
     setPage(seletedPage);
-
     window.scrollTo(0, 0);
   };
 
@@ -141,7 +123,7 @@ const Example = () => {
 
           {customers.length > 0 && (<CustomersTable customers={customers} handleEditUser={handleEditUser}/>)}
 
-          {totalPage !== 0 && text === '' && (<div>
+          {totalPage !== 0 && (<div>
             <ReactPaginate
               breakLabel={<span className="sm:mx-2 mx-0.5">...</span>}
               nextLabel={
@@ -151,6 +133,7 @@ const Example = () => {
                   <BsChevronRight />
                 </span>
               }
+              forcePage={page-1}
               onPageChange={handleChangePage}
               pageRangeDisplayed={3}
               marginPagesDisplayed={1}
@@ -172,7 +155,7 @@ const Example = () => {
 
         {isOpen ? (
           editUser ? (
-            <FormModal userData={editUser} page={page} toggle={handleFormModal} />
+            <FormModal userData={editUser} toggle={handleFormModal} />
           ) : (
             <FormModal toggle={handleFormModal} />
           )
