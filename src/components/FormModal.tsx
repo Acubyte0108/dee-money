@@ -13,7 +13,6 @@ const API_BASE_URL = "http://localhost:4000";
 
 type FormModalProps = {
   userData?: Customer;
-  page?: number;
   toggle: () => void;
 };
 
@@ -58,7 +57,7 @@ type TUserSchema = z.infer<typeof UserSchema>
 const FormModal = (props: FormModalProps) => {
   const [titles, setTitles] = useState<string[]>([]);
   const [countries, setCountries] = useState<string[]>([]); 
-  const { userData, page, toggle } = props
+  const { userData, toggle } = props
   const queryClient = useQueryClient();
 
   const {
@@ -133,7 +132,7 @@ const FormModal = (props: FormModalProps) => {
     },
     {
       onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: ["customers", page] }) // check อีกรอบหลังทำ Search
+        await queryClient.invalidateQueries({ stale: true })
         toggle();
       },
       onError: (error) => {
