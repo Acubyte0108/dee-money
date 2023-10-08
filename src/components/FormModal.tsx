@@ -187,6 +187,10 @@ const FormModal = (props: FormModalProps) => {
           e.stopPropagation()
         }
       >
+        {mutation.isError && (<div className="text-lg text-red-600 rounded-md bg-red-100 absolute text-center sm:w-2/5 w-fit sm:py-3 py-2 sm:px-0 px-4 sm:top-2 top-4 sm:left-1/2 left-4 sm:-translate-x-1/2">
+            Failed to summit the form
+          </div>
+        )}
         <div className="flex justify-center items-center w-10 h-10 absolute top-4 right-4 cursor-pointer" onClick={toggle}>
           <IconContext.Provider value={{ className:"hover:text-red-500" ,size: "1.5rem" }} >
             <ImCancelCircle />
@@ -194,7 +198,7 @@ const FormModal = (props: FormModalProps) => {
         </div>
         <form className="" onSubmit={handleSubmit(onSubmit)}>
           <div className="pb-12 mt-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
+            <h2 className="text-xl font-semibold leading-7 text-gray-900">
               {userData ? `Edit Customer` : `Add Customer`}
             </h2>
 
