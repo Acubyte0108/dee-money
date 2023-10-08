@@ -5,6 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 import ReactPaginate from "react-paginate";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import CustomersTable from "./CustomersTable";
+import { IconContext } from "react-icons"
+import { GrClearOption } from 'react-icons/gr'
+import { AiOutlineClear } from 'react-icons/ai'
 
 export type Customer = Record<
   "id" | "firstName" | "lastName" | "title" | "email" | "country",
@@ -26,7 +29,7 @@ const fetchCustomers = async (text:string, page: number = 1) => {
   const headersLink = headers.link
   const lastPageNumber = !!headersLink ? Number(
     headersLink.match(/_page=(\d+)>; rel="last"/)[1]
-  ) : 1;
+  ) : 0;
   const result: FetchResult = {
     data,
     lastPageNumber,
@@ -97,15 +100,19 @@ const Example = () => {
           </div>
         </div>
         <div className="flex justify-center items-center mt-4 gap-4">
-          <span className="text-lg">Search:</span>
           <input 
             id="search-customers"
             className="block w-full rounded-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            placeholder="name, email, title, country"
+            placeholder="Search... ex. customers name, email, etc."
             autoComplete="off"
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
+          <div className="cursor-pointer" onClick={() => setText('')}>
+            <IconContext.Provider value={{ className:"hover:text-red-500" ,size: "1.5rem" }} >
+              <AiOutlineClear />
+            </IconContext.Provider>
+          </div>
         </div>
 
         <div className="-mx-4 mt-4 sm:-mx-0 flex flex-col justify-between items-center h-full">
