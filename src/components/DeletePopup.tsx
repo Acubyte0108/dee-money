@@ -64,7 +64,10 @@ const DeletePopup = (props: DeletePopupProps) => {
             <ImCancelCircle />
           </IconContext.Provider>
         </div>
-
+        {mutation.isError && (<div className="text-lg text-red-600 rounded-md bg-red-100 absolute text-center sm:w-fit sm:py-2 sm:px-3 sm:top-4 sm:left-1/2 sm:-translate-x-1/2">
+            Failed to delete customer
+          </div>
+        )}
         <div className="flex flex-col justify-end items-center h-full">
           <div className="">
             <IconContext.Provider
