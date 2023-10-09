@@ -14,7 +14,7 @@ module.exports = async (req, res, next) => {
     );
 
     if (isDuplicate) {
-      return res.status(400).json({ message: '[POST] Duplicate customer' });
+      return res.status(400).json({ message: 'Duplicate customer details found' });
     }
   } else if (req.method === 'PATCH' && req.originalUrl.includes('/customers')) {
     const customerId = req.originalUrl.split('/').pop();
@@ -28,7 +28,7 @@ module.exports = async (req, res, next) => {
     );
 
     if (isDuplicate) {
-      return res.status(400).json({ message: '[PATCH] Duplicate customer' });
+      return res.status(400).json({ message: 'Update causes duplication' });
     }
   }
   
