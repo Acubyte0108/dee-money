@@ -54,7 +54,7 @@ const DeletePopup = (props: DeletePopupProps) => {
       onClick={toggle}
     >
       <div
-        className="bg-white p-6 rounded-xl shadow-lg sm:w-[450px] sm:h-[450px] mx-auto relative"
+        className="bg-white p-4 sm:p-6 rounded-xl shadow-lg w-[320px] h-[280px] sm:w-[350px] sm:h-[350px] lg:w-[450px] lg:h-[450px] mx-auto relative"
         onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
           e.stopPropagation()
         }
@@ -64,35 +64,35 @@ const DeletePopup = (props: DeletePopupProps) => {
             <ImCancelCircle />
           </IconContext.Provider>
         </div>
-        {mutation.isError && (<div className="text-lg text-red-600 rounded-md bg-red-100 absolute text-center sm:w-fit sm:py-2 sm:px-3 sm:top-4 sm:left-1/2 sm:-translate-x-1/2">
+        {mutation.isError && (<div className="lg:text-lg sm:text-medium text-red-600 rounded-md bg-red-100 absolute text-center w-3/5 sm:w-3/5 lg:py-2 py-0.5 sm:py-1 lg:px-3 sm:px-0 top-4 sm:top-5 lg:top-4 sm:left-1/2 sm:-translate-x-1/2">
             Failed to delete customer
           </div>
         )}
         <div className="flex flex-col justify-end items-center h-full">
-          <div className="">
+          <div>
             <IconContext.Provider
-              value={{ className: "text-amber-500", size: "8rem" }}
+              value={{ className: "text-amber-500 text-[4rem] sm:text-[6rem] lg:text-[8rem]" }}
             >
               <PiWarningBold />
             </IconContext.Provider>
           </div>
-          <div className="flex flex-col justify-center items-center py-6 gap-y-3 border-b-2 border-b-slate-300 w-full">
-            <div className="text-lg">Are you sure, to delete this customer</div>
-            <div className="text-xl font-medium">
+          <div className="flex flex-col justify-center items-center lg:py-6 py-4 lg:gap-y-3 border-b-2 border-b-slate-300 w-full">
+            <div className="sm:text-lg">Are you sure, to delete this customer</div>
+            <div className="sm:text-xl font-medium">
               {userData.firstName} {userData.lastName}
             </div>
           </div>
-          <div className="flex justify-center items-center gap-x-4 pt-4 px-4 mt-4 w-full">
+          <div className="flex justify-center items-center lg:gap-x-4 gap-x-2 pt-4 lg:px-4 lg:mt-4 w-full">
             <button
               type="button"
-              className="block rounded-md bg-white px-3 py-3 w-full text-center text-red-600 text-lg font-medium shadow-sm border border-red-600 hover:bg-red-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+              className="block rounded-md bg-white sm:p-3 p-1 w-full text-center text-red-600 text-lg font-medium shadow-sm border border-red-600 hover:bg-red-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
               onClick={handleSubmitDelete}
             >
               Delete
             </button>
             <button
               type="button"
-              className="block rounded-md bg-white px-3 py-3 w-full text-center text-lg font-semibold shadow-sm border border-black hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+              className="block rounded-md bg-white sm:p-3 p-1 w-full text-center text-lg font-semibold shadow-sm border border-black hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
               onClick={toggle}
             >
               Cancel
