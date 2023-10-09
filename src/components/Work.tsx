@@ -94,6 +94,10 @@ const Example = () => {
     setDeleteUser(user);
   }
 
+  const handleSetPageAfterDelete = () => {
+    setPage(1)
+  }
+
   return (
     <div className="mx-auto max-w-7xl p-6 lg:px-8 h-screen">
       <div className="mx-auto max-w-3xl flex flex-col h-full">
@@ -180,7 +184,7 @@ const Example = () => {
           )
         ) : null}
 
-        {isDelete && deleteUser && (<DeletePopup userData={deleteUser} toggle={handleDeletePopup}/>) }
+        {isDelete && deleteUser && (<DeletePopup userData={deleteUser} setPageAfterDelete={handleSetPageAfterDelete} toggle={handleDeletePopup}/>) }
       </div>
     </div>
   );

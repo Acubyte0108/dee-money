@@ -10,11 +10,12 @@ const API_BASE_URL = "http://localhost:4000";
 
 type DeletePopupProps = {
   userData: Customer;
+  setPageAfterDelete: () => void;
   toggle: () => void;
 };
 
 const DeletePopup = (props: DeletePopupProps) => {
-  const { userData, toggle } = props;
+  const { userData,setPageAfterDelete, toggle } = props;
   const queryClient = useQueryClient();
 
   const mutation = useMutation<AxiosResponse, Error, string>(
@@ -27,6 +28,7 @@ const DeletePopup = (props: DeletePopupProps) => {
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries({ stale: true });
+        setPageAfterDelete()
         toggle();
       },
       onError: (error) => {
@@ -45,7 +47,7 @@ const DeletePopup = (props: DeletePopupProps) => {
 
   const handleSubmitDelete = () => {
     const customerId = userData.id;
-    // mutation.mutate(customerId)
+    mutation.mutate(customerId)
   };
 
   return (
