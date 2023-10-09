@@ -17,16 +17,16 @@ describe('Test CustomersTable component', () => {
         firstName: "TestOne",
         lastName: "Test-LastOne",
         title: "Corporate Tactics Engineer",
-        country: "Malta",
         email: "test1.last1@example.com",
+        country: "Malta"       
       },
       {
         id: "2",
         firstName: "TestTwo",
         lastName: "Test-LastTwo",
         title: "Corporate Tactics Engineer",
-        country: "Malta",
         email: "test2.last2@example.com",
+        country: "Malta"
       },
   ];
 
