@@ -18,6 +18,10 @@ const mockCustomer: Customer = {
 const mockSetPageAfterDelete = jest.fn();
 const mockToggle = jest.fn();
 
+beforeEach(() => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+});
+
 afterEach(() => {
   jest.clearAllMocks();
 });
@@ -61,6 +65,31 @@ describe("DeletePopup", () => {
       );
       expect(mockSetPageAfterDelete).toHaveBeenCalled();
       expect(mockToggle).toHaveBeenCalled();
+    });
+  });
+
+  it("handles error when axios.delete fails", async () => {
+    (axios.delete as jest.Mock).mockRejectedValueOnce(
+      new Error("Delete failed")
+    );
+
+    const { getByRole, getByText } = render(
+      <QueryClientProvider client={new QueryClient()}>
+        <DeletePopup
+          userData={mockCustomer}
+          setPageAfterDelete={mockSetPageAfterDelete}
+          toggle={mockToggle}
+        />
+      </QueryClientProvider>
+    );
+
+    fireEvent.click(getByRole("button", { name: /Delete/i }));
+
+    await waitFor(() => {
+      expect(axios.delete).toHaveBeenCalledWith(
+        "http://localhost:4000/customers/1"
+      );
+      expect(getByText(/Failed to delete customer/i)).toBeInTheDocument();
     });
   });
 });
