@@ -6,7 +6,7 @@ import { FaPen, FaTrashAlt } from 'react-icons/fa'
 type CustomersTableProps = {
   customers: Customer[];
   handleEditUser: (person: Customer) => void;
-  handleDeleteUser: (id: string) => void
+  handleDeleteUser: (person: Customer) => void
 };
 
 const CustomersTable = (props: CustomersTableProps) => {
@@ -70,7 +70,7 @@ const CustomersTable = (props: CustomersTableProps) => {
                         <FaPen />
                       </IconContext.Provider>
                     </span>
-                    <span className="cursor-pointer" onClick={() => handleDeleteUser(person.id)}>
+                    <span className="cursor-pointer" onClick={() => handleDeleteUser(person)}>
                       <IconContext.Provider value={{ className:"text-red-500" ,size: "1rem" }} >
                         <FaTrashAlt />
                       </IconContext.Provider>

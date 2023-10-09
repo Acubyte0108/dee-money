@@ -45,7 +45,7 @@ const Example = () => {
   const [totalPage, setTotalPage] = useState(0);
   const [text, setText] = useState('')
   const [isDelete, setIsDelete] = useState(false)
-  const [deleteId, setDeleteId] = useState('');
+  const [deleteUser, setDeleteUser] = useState<Customer | null>(null);
 
   const { isLoading, isError, isSuccess, data } = useQuery({
     queryKey: ["customers", text, page],
@@ -86,12 +86,12 @@ const Example = () => {
 
   const handleDeletePopup = () => {
     setIsDelete(!isDelete)
-    setDeleteId('');
+    setDeleteUser(null);
   }
 
-  const handleDeleteUser = (id: string) => {
+  const handleDeleteUser = (user: Customer) => {
     setIsDelete(!isDelete)
-    setDeleteId(id);
+    setDeleteUser(user);
   }
 
   return (
@@ -180,7 +180,7 @@ const Example = () => {
           )
         ) : null}
 
-        {isDelete && (<DeletePopup customerId={deleteId} toggle={handleDeletePopup}/>) }
+        {isDelete && deleteUser && (<DeletePopup userData={deleteUser} toggle={handleDeletePopup}/>) }
       </div>
     </div>
   );
