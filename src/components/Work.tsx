@@ -37,7 +37,7 @@ const fetchCustomers = async (text:string, page: number = 1) => {
   return result;
 };
 
-const Example = () => {
+const Work = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [editUser, setEditUser] = useState<Customer | null>(null);
@@ -191,4 +191,4 @@ const Example = () => {
   );
 };
 
-export default Example;
+export default Work;
