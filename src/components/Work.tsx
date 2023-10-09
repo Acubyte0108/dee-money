@@ -121,7 +121,7 @@ const Example = () => {
             onChange={(e) => setText(e.target.value)}
           />
           <div className="cursor-pointer" onClick={() => setText('')}>
-            <IconContext.Provider value={{ className:"hover:text-red-500" ,size: "1.5rem" }} >
+            <IconContext.Provider value={{ className:"hover:text-red-500", size: "1.5rem" }} >
               <AiOutlineClear />
             </IconContext.Provider>
           </div>

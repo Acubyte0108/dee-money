@@ -151,7 +151,7 @@ const FormModal = (props: FormModalProps) => {
       onClick={toggle}
     >
       <div
-        className="bg-white p-6 rounded shadow-lg lg:w-[900px] mx-auto relative max-sm:w-4/5"
+        className="bg-white p-6 rounded-xl shadow-lg lg:w-[900px] mx-auto relative max-sm:w-4/5"
         onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
           e.stopPropagation()
         }
