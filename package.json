@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"vite --port 3030\"",
+    "dev": "concurrently \"npm run server\" \"vite --port 3000\"",
     "server": "json-server --watch db.json --middlewares ./checkDuplicate.cjs --port 4000",
     "migrate:db": "node ./migrate-db.js",
     "build": "tsc && vite build",

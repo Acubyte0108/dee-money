@@ -1,13 +1,16 @@
 import { Customer } from "./Work";
 import { useMediaQuery } from "react-responsive";
+import { IconContext } from "react-icons"
+import { FaPen, FaTrashAlt } from 'react-icons/fa'
 
 type CustomersTableProps = {
   customers: Customer[];
   handleEditUser: (person: Customer) => void;
+  handleDeleteUser: (person: Customer) => void
 };
 
 const CustomersTable = (props: CustomersTableProps) => {
-  const { customers, handleEditUser } = props;
+  const { customers, handleEditUser, handleDeleteUser } = props;
 
   const isBigScreen = useMediaQuery({ query: "(min-width: 640px)" });
   const isMobileScreen = useMediaQuery({ query: "(max-width: 639px)" });
@@ -55,12 +58,18 @@ const CustomersTable = (props: CustomersTableProps) => {
                   {person.email}
                 </td>
                 <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                  <span
-                    className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
-                    onClick={() => handleEditUser(person)}
-                  >
-                    Edit
-                  </span>
+                  <div className="flex justify-center items-center gap-x-8">
+                    <span className="cursor-pointer" onClick={() => handleEditUser(person)}>
+                      <IconContext.Provider value={{ className:"text-indigo-600" ,size: "1rem" }} >
+                        <FaPen />
+                      </IconContext.Provider>
+                    </span>
+                    <span className="cursor-pointer" onClick={() => handleDeleteUser(person)}>
+                      <IconContext.Provider value={{ className:"text-red-500" ,size: "1rem" }} >
+                        <FaTrashAlt />
+                      </IconContext.Provider>
+                    </span>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -79,20 +88,24 @@ const CustomersTable = (props: CustomersTableProps) => {
                 className="flex justify-between py-3 border-b-2 border-b-grey-300"
               >
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium">
+                  <span className="text-sm font-bold">
                     {person.firstName} {person.lastName} <br />
                     {person.email}
                   </span>
-                  <span className="text-xs">
+                  <span className="text-sm">
                     {person.title} <br /> {person.country}
                   </span>
                 </div>
-                <div className="flex justify-center items-center">
-                  <span
-                    className="text-sm font-medium text-indigo-600 hover:text-indigo-900 cursor-pointer"
-                    onClick={() => handleEditUser(person)}
-                  >
-                    Edit
+                <div className="flex justify-center items-center gap-x-6">
+                  <span className="cursor-pointer" onClick={() => handleEditUser(person)}>
+                    <IconContext.Provider value={{ className:"text-indigo-600" ,size: "1rem" }} >
+                      <FaPen />
+                    </IconContext.Provider>
+                  </span>
+                  <span className="cursor-pointer" onClick={() => handleDeleteUser(person)}>
+                    <IconContext.Provider value={{ className:"text-red-500" ,size: "1rem" }} >
+                      <FaTrashAlt />
+                    </IconContext.Provider>
                   </span>
                 </div>
               </div>

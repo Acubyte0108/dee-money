@@ -7,6 +7,7 @@ import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import CustomersTable from "./CustomersTable";
 import { IconContext } from "react-icons"
 import { AiOutlineClear } from 'react-icons/ai'
+import DeletePopup from "./DeletePopup";
 
 export type Customer = Record<
   "id" | "firstName" | "lastName" | "title" | "email" | "country",
@@ -43,6 +44,8 @@ const Example = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [text, setText] = useState('')
+  const [isDelete, setIsDelete] = useState(false)
+  const [deleteUser, setDeleteUser] = useState<Customer | null>(null);
 
   const { isLoading, isError, isSuccess, data } = useQuery({
     queryKey: ["customers", text, page],
@@ -81,6 +84,21 @@ const Example = () => {
     window.scrollTo(0, 0);
   };
 
+  const handleDeletePopup = () => {
+    setIsDelete(!isDelete)
+    setDeleteUser(null);
+  }
+
+  const handleDeleteUser = (user: Customer) => {
+    setIsDelete(!isDelete)
+    setDeleteUser(user);
+  }
+
+  const handleSetPageAfterDelete = () => {
+    setText('')
+    setPage(1)
+  }
+
   return (
     <div className="mx-auto max-w-7xl p-6 lg:px-8 h-screen">
       <div className="mx-auto max-w-3xl flex flex-col h-full">
@@ -101,14 +119,14 @@ const Example = () => {
         <div className="flex justify-center items-center mt-4 gap-4">
           <input 
             id="search-customers"
-            className="block w-full rounded-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            placeholder="Search... ex. customers name, email, etc."
+            className="block w-full placeholder:italic placeholder:pl-1 rounded-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="Search... ex. customer name, email, etc."
             autoComplete="off"
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
           <div className="cursor-pointer" onClick={() => setText('')}>
-            <IconContext.Provider value={{ className:"hover:text-red-500" ,size: "1.5rem" }} >
+            <IconContext.Provider value={{ className:"hover:text-red-500", size: "1.5rem" }} >
               <AiOutlineClear />
             </IconContext.Provider>
           </div>
@@ -127,7 +145,7 @@ const Example = () => {
             </div>
           )}
 
-          {customers.length > 0 && (<CustomersTable customers={customers} handleEditUser={handleEditUser}/>)}
+          {customers.length > 0 && (<CustomersTable customers={customers} handleEditUser={handleEditUser} handleDeleteUser={handleDeleteUser}/>)}
 
           {totalPage !== 0 && (<div>
             <ReactPaginate
@@ -166,6 +184,8 @@ const Example = () => {
             <FormModal toggle={handleFormModal} />
           )
         ) : null}
+
+        {isDelete && deleteUser && (<DeletePopup userData={deleteUser} setPageAfterDelete={handleSetPageAfterDelete} toggle={handleDeletePopup}/>) }
       </div>
     </div>
   );
