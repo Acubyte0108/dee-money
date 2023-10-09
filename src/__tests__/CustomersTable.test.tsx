@@ -46,13 +46,25 @@ const mockCustomers: Customer[] = [
 
 describe("Test CustomersTable component", () => {
   it("renders without crashing", () => {
-    render(
+    const { getByText, getAllByText } = render(
       <CustomersTable
         customers={mockCustomers}
         handleEditUser={mockHandleEditUser}
         handleDeleteUser={mockHandleDeleteUser}
       />
     );
+
+    mockCustomers.forEach((customer) => {
+      expect(getByText(new RegExp(customer.firstName, "i"))).toBeInTheDocument();
+      expect(getByText(new RegExp(customer.lastName, "i"))).toBeInTheDocument();
+      expect(getByText(new RegExp(customer.email, "i"))).toBeInTheDocument();
+      expect(getAllByText(new RegExp(customer.title, "i")).length).toBe(
+        mockCustomers.filter((c) => c.title === customer.title).length
+      );
+      expect(getAllByText(new RegExp(customer.country, "i")).length).toBe(
+        mockCustomers.filter((c) => c.country === customer.country).length
+      );
+    });
   });
 
   it("calls handleEditUser and handleDeleteUser when respective buttons are clicked", () => {
