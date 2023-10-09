@@ -32,7 +32,7 @@ const DeletePopup = (props: DeletePopupProps) => {
         toggle();
       },
       onError: (error) => {
-        console.log("Error:", error);
+        console.error("Error:", error);
       },
     }
   );
