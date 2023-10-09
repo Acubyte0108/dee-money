@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import axios, { AxiosResponse } from "axios";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { IconContext } from "react-icons"
+import { PiWarningBold } from 'react-icons/pi'
 
 const API_BASE_URL = "http://localhost:4000";
 
@@ -39,13 +41,21 @@ const DeletePopup = (props: DeletePopupProps) => {
     };
   }, []);
 
-  const handleClick = () => {
+  const handleSubmitDelete = () => {
     mutation.mutate(customerId)
   }
 
   return (<div className="fixed bg-gray-800 bg-opacity-75 inset-0 flex items-center justify-center z-10" onClick={toggle}>
-            <div className="bg-white p-6 rounded shadow-lg sm:w-[500px] sm:h-[500px] mx-auto" onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation()}>
+            <div className="bg-white p-6 rounded shadow-lg sm:w-[450px] sm:h-[450px] mx-auto" onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation()}>
                 {`Delete ${customerId}`}
+                <div className="flex flex-col">
+                  <div>
+                
+                  </div>
+                  <div>
+                    <span>Are you sure, to delete this customer <br/> Test Last-Test</span>
+                  </div>
+                </div>
             </div>
         </div>) 
 };
