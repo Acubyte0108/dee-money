@@ -26,7 +26,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe("DeletePopup", () => {
+describe("Test DeletePopup component", () => {
   it("renders correctly", () => {
     const { getByText } = render(
       <QueryClientProvider client={new QueryClient()}>
