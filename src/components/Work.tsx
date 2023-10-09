@@ -95,6 +95,7 @@ const Example = () => {
   }
 
   const handleSetPageAfterDelete = () => {
+    setText('')
     setPage(1)
   }
 
