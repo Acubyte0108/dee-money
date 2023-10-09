@@ -4,6 +4,7 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { IconContext } from "react-icons";
 import { PiWarningBold } from "react-icons/pi";
 import { Customer } from "./Work";
+import { ImCancelCircle } from 'react-icons/im'
 
 const API_BASE_URL = "http://localhost:4000";
 
@@ -53,11 +54,17 @@ const DeletePopup = (props: DeletePopupProps) => {
       onClick={toggle}
     >
       <div
-        className="bg-white p-6 rounded-xl shadow-lg sm:w-[450px] sm:h-[450px] mx-auto"
+        className="bg-white p-6 rounded-xl shadow-lg sm:w-[450px] sm:h-[450px] mx-auto relative"
         onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
           e.stopPropagation()
         }
       >
+        <div className="flex justify-center items-center w-10 h-10 absolute sm:top-4 sm:right-4 top-2 right-2 cursor-pointer" onClick={toggle}>
+          <IconContext.Provider value={{ className:"hover:text-red-500", size: "1.5rem" }} >
+            <ImCancelCircle />
+          </IconContext.Provider>
+        </div>
+
         <div className="flex flex-col justify-end items-center h-full">
           <div className="">
             <IconContext.Provider
