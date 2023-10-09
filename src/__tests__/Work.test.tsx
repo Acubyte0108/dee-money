@@ -1,0 +1,69 @@
+import { render, waitFor } from "@testing-library/react";
+import axios from "axios";
+import Work, { Customer } from "../components/Work";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+jest.mock("axios");
+
+const mockCustomers: Customer[] = [
+  {
+    id: "1",
+    firstName: "TestOne",
+    lastName: "Test-LastOne",
+    title: "Corporate Tactics Engineer",
+    email: "test1.last1@example.com",
+    country: "Malta",
+  },
+  {
+    id: "2",
+    firstName: "TestTwo",
+    lastName: "Test-LastTwo",
+    title: "Corporate Tactics Engineer",
+    email: "test2.last2@example.com",
+    country: "Malta",
+  },
+];
+
+let queryClient: QueryClient;
+
+beforeEach(() => {
+  queryClient = new QueryClient();
+  (axios.get as jest.Mock).mockResolvedValueOnce({
+    data: mockCustomers,
+    headers: {
+      link: '<http://localhost:4000/customers?q=&_page=2>; rel="next", <http://localhost:4000/customers?q=&_page=2>; rel="last"',
+    },
+  });
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+describe("Test Work component", () => {
+  it("renders without crashing", () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Work />
+      </QueryClientProvider>
+    );
+  });
+
+  it("fetches and displays customers", async () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Work />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+    // mockCustomers.forEach((customer) => {
+    //   expect(screen.getByText(customer.firstName)).toBeInTheDocument();
+    //   expect(screen.getByText(customer.lastName)).toBeInTheDocument();
+    //   // Add more assertions as needed
+    // });
+  });
+
+  // Add more tests as needed, for example to test the search functionality, the pagination controls, and the modal dialogs
+});
