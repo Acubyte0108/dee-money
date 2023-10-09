@@ -166,7 +166,7 @@ const FormModal = (props: FormModalProps) => {
           </IconContext.Provider>
         </div>
         <form className="" onSubmit={handleSubmit(onSubmit)}>
-          <div className="pb-12 mt-12 max-sm:pb-0 max-sm:mt-0">
+          <div className="pb-2 mt-12 max-sm:pb-0 max-sm:mt-0">
             <h2 className="text-xl font-semibold leading-7 text-gray-900">
               {userData ? `Edit Customer` : `Add Customer`}
             </h2>
@@ -283,11 +283,11 @@ const FormModal = (props: FormModalProps) => {
                   )}
                 </div>
               </div>
-              <div className="sm:col-span-6">
+              <div className="sm:col-start-6 sm:col-span-1 sm:row-start-4 sm:row-span-1">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="block rounded-md bg-indigo-600 px-3 py-2 max-sm:mt-4 text-center text-sm font-semibold w-full sm:w-fit text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="block rounded-md bg-indigo-600 px-3 sm:py-2.5 py-2 max-sm:mt-4 text-center text-sm sm:text-base font-semibold w-full text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Submit
                 </button>
