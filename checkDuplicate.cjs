@@ -6,7 +6,8 @@ module.exports = async (req, res, next) => {
   const data = JSON.parse(fs.readFileSync('db.json', 'utf-8'));
   const customers = data.customers;
 
-  if (req.method === 'POST' && req.originalUrl.includes('/customers')) {
+  if (req.method === 'POST' && req.originalUrl ==='/customers') {
+    
     const isDuplicate = customers.some(customer => 
       (customer.firstName === newCustomer.firstName &&
       customer.lastName === newCustomer.lastName) ||
@@ -16,7 +17,7 @@ module.exports = async (req, res, next) => {
     if (isDuplicate) {
       return res.status(400).json({ message: 'Duplicate customer details found' });
     }
-  } else if (req.method === 'PATCH' && req.originalUrl.includes('/customers')) {
+  } else if (req.method === 'PATCH' && req.originalUrl.includes('/customers/')) {
     const customerId = req.originalUrl.split('/').pop();
 
     const isDuplicate = customers.some(customer => 
