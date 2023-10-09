@@ -19,7 +19,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-    jest.clearAllMocks();
+  jest.clearAllMocks();
 });
 
 const mockHandleEditUser = jest.fn();
