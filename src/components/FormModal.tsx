@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse, AxiosError } from "axios";
 import regex from "../constants/regex";
 import { Customer } from "./Work";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
@@ -57,6 +57,8 @@ type TUserSchema = z.infer<typeof UserSchema>
 const FormModal = (props: FormModalProps) => {
   const [titles, setTitles] = useState<string[]>([]);
   const [countries, setCountries] = useState<string[]>([]); 
+  const [errorMsg, setErrorMsg] = useState('')
+
   const { userData, toggle } = props
   const queryClient = useQueryClient();
 
@@ -103,6 +105,7 @@ const FormModal = (props: FormModalProps) => {
     return () => {
       setTitles([]);
       setCountries([]);
+      setErrorMsg('')
       document.body.style.overflow = "unset";
     };
   }, []);
@@ -117,7 +120,7 @@ const FormModal = (props: FormModalProps) => {
     }
   }, [titles, countries]);
 
-  const mutation = useMutation<AxiosResponse, Error, TUserSchema>(
+  const mutation = useMutation<AxiosResponse, AxiosError | any, TUserSchema>(
     async (data: TUserSchema) => {
       if (userData) {
         const response = await axios.patch(
@@ -136,7 +139,10 @@ const FormModal = (props: FormModalProps) => {
         toggle();
       },
       onError: (error) => {
-        console.log("Error:", error);
+        console.error("Error:", error);
+        if(error.response.data.message) {
+          setErrorMsg(error.response.data.message)
+        }
       },
     }
   );
@@ -157,7 +163,7 @@ const FormModal = (props: FormModalProps) => {
         }
       >
         {mutation.isError && (<div className="text-lg text-red-600 rounded-md bg-red-100 absolute text-center sm:w-2/5 w-fit sm:py-3 py-2 sm:px-0 px-4 sm:top-2 top-4 sm:left-1/2 left-4 sm:-translate-x-1/2">
-            Failed to summit the form
+            {errorMsg ? errorMsg : "Failed to summit the form"}
           </div>
         )}
         <div className="flex justify-center items-center w-10 h-10 absolute sm:top-4 sm:right-4 top-2 right-2 cursor-pointer" onClick={toggle}>
