@@ -59,12 +59,12 @@ const CustomersTable = (props: CustomersTableProps) => {
                 </td>
                 <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                   <div className="flex justify-center items-center gap-x-8">
-                    <span className="cursor-pointer" onClick={() => handleEditUser(person)}>
+                    <span data-testid="edit-button" className="cursor-pointer" onClick={() => handleEditUser(person)}>
                       <IconContext.Provider value={{ className:"text-indigo-600" ,size: "1rem" }} >
                         <FaPen />
                       </IconContext.Provider>
                     </span>
-                    <span className="cursor-pointer" onClick={() => handleDeleteUser(person)}>
+                    <span data-testid="delete-button" className="cursor-pointer" onClick={() => handleDeleteUser(person)}>
                       <IconContext.Provider value={{ className:"text-red-500" ,size: "1rem" }} >
                         <FaTrashAlt />
                       </IconContext.Provider>
@@ -97,12 +97,12 @@ const CustomersTable = (props: CustomersTableProps) => {
                   </span>
                 </div>
                 <div className="flex justify-center items-center gap-x-6">
-                  <span className="cursor-pointer" onClick={() => handleEditUser(person)}>
+                  <span data-testid="edit-button" className="cursor-pointer" onClick={() => handleEditUser(person)}>
                     <IconContext.Provider value={{ className:"text-indigo-600" ,size: "1rem" }} >
                       <FaPen />
                     </IconContext.Provider>
                   </span>
-                  <span className="cursor-pointer" onClick={() => handleDeleteUser(person)}>
+                  <span data-testid="delete-button" className="cursor-pointer" onClick={() => handleDeleteUser(person)}>
                     <IconContext.Provider value={{ className:"text-red-500" ,size: "1rem" }} >
                       <FaTrashAlt />
                     </IconContext.Provider>
