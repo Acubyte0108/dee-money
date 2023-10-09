@@ -88,11 +88,11 @@ const CustomersTable = (props: CustomersTableProps) => {
                 className="flex justify-between py-3 border-b-2 border-b-grey-300"
               >
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium">
+                  <span className="text-sm font-bold">
                     {person.firstName} {person.lastName} <br />
                     {person.email}
                   </span>
-                  <span className="text-xs">
+                  <span className="text-sm">
                     {person.title} <br /> {person.country}
                   </span>
                 </div>
