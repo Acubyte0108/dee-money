@@ -133,18 +133,18 @@ describe("Test Work component", () => {
     expect(getByText('...Loading')).toBeInTheDocument();
   });
 
-  // it('displays error state', async () => {
-  //   (axios.get as jest.Mock).mockRejectedValueOnce(new Error('Failed to fetch'));
+  it('displays error state', async () => {
+    (axios.get as jest.Mock).mockRejectedValueOnce(new Error('Failed to fetch'));
 
-  //   const { findByText } = render(
-  //     <QueryClientProvider client={queryClient}>
-  //       <Work />
-  //     </QueryClientProvider>
-  //   );
+    const { findByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <Work />
+      </QueryClientProvider>
+    );
 
-  //   await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-  //   const errorMessage = await findByText(/Failed to fetch customers list/i);
-  //   expect(errorMessage).toBeInTheDocument();
-  // });
+    const errorMessage = await findByText(/Failed to fetch customers list/i);
+    expect(errorMessage).toBeInTheDocument();
+  });
 });
