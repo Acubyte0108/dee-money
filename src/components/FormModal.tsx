@@ -16,7 +16,7 @@ type FormModalProps = {
   toggle: () => void;
 };
 
-const UserSchema = z.object({
+const CustomerSchema = z.object({
   firstName: z
     .string()
     .min(1, "Please fill the first name")
@@ -52,7 +52,7 @@ const UserSchema = z.object({
   country: z.string().min(1, "Please select country"),
 });
 
-type TUserSchema = z.infer<typeof UserSchema>
+type TCustomerSchema = z.infer<typeof CustomerSchema>
 
 const FormModal = (props: FormModalProps) => {
   const [titles, setTitles] = useState<string[]>([]);
@@ -67,8 +67,8 @@ const FormModal = (props: FormModalProps) => {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<TUserSchema>({
-    resolver: zodResolver(UserSchema),
+  } = useForm<TCustomerSchema>({
+    resolver: zodResolver(CustomerSchema),
   });
 
   const getOptionsData = async () => {
@@ -120,8 +120,8 @@ const FormModal = (props: FormModalProps) => {
     }
   }, [titles, countries]);
 
-  const mutation = useMutation<AxiosResponse, AxiosError | any, TUserSchema>(
-    async (data: TUserSchema) => {
+  const mutation = useMutation<AxiosResponse, AxiosError | any, TCustomerSchema>(
+    async (data: TCustomerSchema) => {
       if (userData) {
         const response = await axios.patch(
           API_BASE_URL + "/customers/" + userData.id,
@@ -147,7 +147,7 @@ const FormModal = (props: FormModalProps) => {
     }
   );
 
-  const onSubmit = async (data: TUserSchema) => {
+  const onSubmit = async (data: TCustomerSchema) => {
     mutation.mutate(data)
   };
 
