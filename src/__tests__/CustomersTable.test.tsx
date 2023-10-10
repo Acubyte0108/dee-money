@@ -12,9 +12,6 @@ beforeEach(() => {
     if (query.query === "(min-width: 640px)") {
       return true;
     }
-    if (query.query === "(max-width: 639px)") {
-      return false;
-    }
   });
 });
 
@@ -45,14 +42,46 @@ const mockCustomers: Customer[] = [
 ];
 
 describe("Test CustomersTable component", () => {
-  it("renders without crashing", () => {
-    const { getByText, getAllByText } = render(
+  it("renders customers on big screen", () => {
+    const { getByText, getAllByText, getByTestId } = render(
       <CustomersTable
         customers={mockCustomers}
         handleEditUser={mockHandleEditUser}
         handleDeleteUser={mockHandleDeleteUser}
       />
     );
+
+    expect(getByTestId('customers-table')).toBeInTheDocument();
+
+    mockCustomers.forEach((customer) => {
+      expect(getByText(new RegExp(customer.firstName, "i"))).toBeInTheDocument();
+      expect(getByText(new RegExp(customer.lastName, "i"))).toBeInTheDocument();
+      expect(getByText(new RegExp(customer.email, "i"))).toBeInTheDocument();
+      expect(getAllByText(new RegExp(customer.title, "i")).length).toBe(
+        mockCustomers.filter((c) => c.title === customer.title).length
+      );
+      expect(getAllByText(new RegExp(customer.country, "i")).length).toBe(
+        mockCustomers.filter((c) => c.country === customer.country).length
+      );
+    });
+  });
+
+  it("renders customers on mobile screen", () => {
+    (useMediaQuery as jest.Mock).mockImplementation((query) => {
+      if (query.query === "(min-width: 640px)") {
+        return false;
+      }
+    });
+
+    const { getByText, getAllByText, getByTestId } = render(
+      <CustomersTable
+        customers={mockCustomers}
+        handleEditUser={mockHandleEditUser}
+        handleDeleteUser={mockHandleDeleteUser}
+      />
+    );
+
+    expect(getByTestId('customers-table-mobile')).toBeInTheDocument();
 
     mockCustomers.forEach((customer) => {
       expect(getByText(new RegExp(customer.firstName, "i"))).toBeInTheDocument();
