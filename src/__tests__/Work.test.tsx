@@ -46,7 +46,7 @@ afterEach(() => {
 });
 
 describe("Test Work component", () => {
-  it("renders without crashing", () => {
+  it("renders correctly", () => {
     const { getByRole, getByPlaceholderText } = render(
       <QueryClientProvider client={queryClient}>
         <Work />
