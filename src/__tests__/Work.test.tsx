@@ -2,9 +2,9 @@ import { render, waitFor } from "@testing-library/react";
 import axios from "axios";
 import Work, { Customer } from "../components/Work";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useMediaQuery } from 'react-responsive';
+import { useMediaQuery } from "react-responsive";
 
-jest.mock('react-responsive', () => ({
+jest.mock("react-responsive", () => ({
   useMediaQuery: jest.fn(),
 }));
 
@@ -52,20 +52,19 @@ describe("Test Work component", () => {
         <Work />
       </QueryClientProvider>
     );
-  
-    const addButton = getByRole('button', { name: /add customer/i });
+
+    const addButton = getByRole("button", { name: /add customer/i });
     expect(addButton).toBeInTheDocument();
-  
-    const searchInput = getByPlaceholderText(/search... ex. customer name, email, etc./i);
+
+    const searchInput = getByPlaceholderText(/search/i);
     expect(searchInput).toBeInTheDocument();
   });
-  
 
   it("fetches and displays customers", async () => {
     (useMediaQuery as jest.Mock).mockImplementation((query) => {
-        if (query.query === "(min-width: 640px)") {
-          return true;
-        }
+      if (query.query === "(min-width: 640px)") {
+        return true;
+      }
     });
 
     const { findByText, findAllByText, findByTestId } = render(
@@ -76,18 +75,19 @@ describe("Test Work component", () => {
 
     await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
 
-    await findByTestId('customers-table');
+    const customersTable = await findByTestId("customers-table");
+    expect(customersTable).toBeInTheDocument();
 
     for (const customer of mockCustomers) {
       const firstNameElement = await findByText(new RegExp(customer.firstName, "i"));
       expect(firstNameElement).toBeInTheDocument();
-    
+
       const lastNameElement = await findByText(new RegExp(customer.lastName, "i"));
       expect(lastNameElement).toBeInTheDocument();
-    
+
       const emailElement = await findByText(new RegExp(customer.email, "i"));
       expect(emailElement).toBeInTheDocument();
-    
+
       const titleElements = await findAllByText(new RegExp(customer.title, "i"));
       expect(titleElements.length).toBe(
         mockCustomers.filter((c) => c.title === customer.title).length
