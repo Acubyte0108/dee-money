@@ -61,7 +61,7 @@ describe("Test DeletePopup component", () => {
 
     await waitFor(() => {
       expect(axios.delete).toHaveBeenCalledWith(
-        "http://localhost:4000/customers/1"
+        `http://localhost:4000/customers/${mockCustomer.id}`
       );
       expect(mockSetPageAfterDelete).toHaveBeenCalled();
       expect(mockToggle).toHaveBeenCalled();
@@ -87,7 +87,7 @@ describe("Test DeletePopup component", () => {
 
     await waitFor(() => {
       expect(axios.delete).toHaveBeenCalledWith(
-        "http://localhost:4000/customers/1"
+        `http://localhost:4000/customers/${mockCustomer.id}`
       );
       expect(getByText(/Failed to delete customer/i)).toBeInTheDocument();
     });
