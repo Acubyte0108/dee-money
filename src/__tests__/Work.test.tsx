@@ -33,12 +33,6 @@ let queryClient: QueryClient;
 
 beforeEach(() => {
   queryClient = new QueryClient();
-  (axios.get as jest.Mock).mockResolvedValueOnce({
-    data: mockCustomers,
-    headers: {
-      link: '<http://localhost:4000/customers?q=&_page=2>; rel="next", <http://localhost:4000/customers?q=&_page=2>; rel="last"',
-    },
-  });
 });
 
 afterEach(() => {
@@ -47,6 +41,12 @@ afterEach(() => {
 
 describe("Test Work component", () => {
   it("renders correctly", () => {
+    (axios.get as jest.Mock).mockResolvedValueOnce({
+      data: mockCustomers,
+      headers: {
+        link: '<http://localhost:4000/customers?q=&_page=2>; rel="next", <http://localhost:4000/customers?q=&_page=2>; rel="last"',
+      },
+    });
     const { getByRole, getByPlaceholderText } = render(
       <QueryClientProvider client={queryClient}>
         <Work />
@@ -61,6 +61,12 @@ describe("Test Work component", () => {
   });
 
   it("fetches and displays customers", async () => {
+    (axios.get as jest.Mock).mockResolvedValueOnce({
+      data: mockCustomers,
+      headers: {
+        link: '<http://localhost:4000/customers?q=&_page=2>; rel="next", <http://localhost:4000/customers?q=&_page=2>; rel="last"',
+      },
+    });
     (useMediaQuery as jest.Mock).mockImplementation((query) => {
       if (query.query === "(min-width: 640px)") {
         return true;
@@ -99,4 +105,33 @@ describe("Test Work component", () => {
       );
     }
   });
+
+  it('displays loading state', () => {
+    (axios.get as jest.Mock).mockImplementationOnce(() =>
+      new Promise((resolve) => setTimeout(() => resolve({ data: [] }), 2000))
+    );
+
+    const { getByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <Work />
+      </QueryClientProvider>
+    );
+
+    expect(getByText('...Loading')).toBeInTheDocument();
+  });
+
+  // it('displays error state', async () => {
+  //   (axios.get as jest.Mock).mockRejectedValueOnce(new Error('Failed to fetch'));
+
+  //   const { findByText } = render(
+  //     <QueryClientProvider client={queryClient}>
+  //       <Work />
+  //     </QueryClientProvider>
+  //   );
+
+  //   await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(1));
+
+  //   const errorMessage = await findByText(/Failed to fetch customers list/i);
+  //   expect(errorMessage).toBeInTheDocument();
+  // });
 });
