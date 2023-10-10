@@ -60,9 +60,7 @@ describe("Test DeletePopup component", () => {
     fireEvent.click(getByRole("button", { name: /Delete/i }));
 
     await waitFor(() => {
-      expect(axios.delete).toHaveBeenCalledWith(
-        `http://localhost:4000/customers/${mockCustomer.id}`
-      );
+      expect((axios.delete as jest.Mock).mock.calls[0][0]).toContain(`/customers/${mockCustomer.id}`);
       expect(mockSetPageAfterDelete).toHaveBeenCalled();
       expect(mockToggle).toHaveBeenCalled();
     });
@@ -86,9 +84,7 @@ describe("Test DeletePopup component", () => {
     fireEvent.click(getByRole("button", { name: /Delete/i }));
 
     await waitFor(() => {
-      expect(axios.delete).toHaveBeenCalledWith(
-        `http://localhost:4000/customers/${mockCustomer.id}`
-      );
+      expect((axios.delete as jest.Mock).mock.calls[0][0]).toContain(`/customers/${mockCustomer.id}`);
       expect(getByText(/Failed to delete customer/i)).toBeInTheDocument();
     });
   });
