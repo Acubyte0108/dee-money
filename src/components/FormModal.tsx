@@ -166,13 +166,16 @@ const FormModal = (props: FormModalProps) => {
             {errorMsg ? errorMsg : "Failed to summit the form"}
           </div>
         )}
+        {mutation.isLoading && (<div className="text-lg rounded-md text-amber-600 bg-yellow-100 absolute text-center w-fit sm:py-3 py-2 sm:px-8 px-4 sm:top-2 top-4 sm:left-1/2 left-4 sm:-translate-x-1/2">
+            Summiting...
+        </div>)}
         <div className="flex justify-center items-center w-10 h-10 absolute sm:top-4 sm:right-4 top-2 right-2 cursor-pointer" onClick={toggle}>
           <IconContext.Provider value={{ className:"hover:text-red-500", size: "1.5rem" }} >
             <ImCancelCircle />
           </IconContext.Provider>
         </div>
         <form className="" onSubmit={handleSubmit(onSubmit)}>
-          <div className="pb-2 mt-12 max-sm:pb-0 max-sm:mt-0">
+          <div className="pb-2 mt-12 max-sm:pb-0">
             <h2 className="text-xl font-semibold leading-7 text-gray-900">
               {userData ? `Edit Customer` : `Add Customer`}
             </h2>
