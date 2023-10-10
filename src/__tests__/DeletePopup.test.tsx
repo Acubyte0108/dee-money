@@ -18,7 +18,23 @@ const mockCustomer: Customer = {
 const mockSetPageAfterDelete = jest.fn();
 const mockToggle = jest.fn();
 
+let queryClient: QueryClient;
+
 beforeEach(() => {
+  queryClient = new QueryClient({
+    defaultOptions: {
+      mutations: {
+        // turns retries off
+        retry: false,
+      },
+    },
+    logger: {
+      log: console.log,
+      warn: console.warn,
+      // no more errors on the console for tests
+      error: process.env.NODE_ENV === "test" ? () => {} : console.error,
+    },
+  });
   jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
@@ -29,7 +45,7 @@ afterEach(() => {
 describe("Test DeletePopup component", () => {
   it("renders correctly", () => {
     const { getByText } = render(
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryClientProvider client={queryClient}>
         <DeletePopup
           userData={mockCustomer}
           setPageAfterDelete={mockSetPageAfterDelete}
@@ -48,7 +64,7 @@ describe("Test DeletePopup component", () => {
     (axios.delete as jest.Mock).mockResolvedValueOnce({});
 
     const { getByRole } = render(
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryClientProvider client={queryClient}>
         <DeletePopup
           userData={mockCustomer}
           setPageAfterDelete={mockSetPageAfterDelete}
@@ -60,7 +76,9 @@ describe("Test DeletePopup component", () => {
     fireEvent.click(getByRole("button", { name: /Delete/i }));
 
     await waitFor(() => {
-      expect((axios.delete as jest.Mock).mock.calls[0][0]).toContain(`/customers/${mockCustomer.id}`);
+      expect((axios.delete as jest.Mock).mock.calls[0][0]).toContain(
+        `/customers/${mockCustomer.id}`
+      );
       expect(mockSetPageAfterDelete).toHaveBeenCalled();
       expect(mockToggle).toHaveBeenCalled();
     });
@@ -71,8 +89,8 @@ describe("Test DeletePopup component", () => {
       new Error("Delete failed")
     );
 
-    const { getByRole, getByText } = render(
-      <QueryClientProvider client={new QueryClient()}>
+    const { getByRole, findByText } = render(
+      <QueryClientProvider client={queryClient}>
         <DeletePopup
           userData={mockCustomer}
           setPageAfterDelete={mockSetPageAfterDelete}
@@ -83,9 +101,13 @@ describe("Test DeletePopup component", () => {
 
     fireEvent.click(getByRole("button", { name: /Delete/i }));
 
-    await waitFor(() => {
-      expect((axios.delete as jest.Mock).mock.calls[0][0]).toContain(`/customers/${mockCustomer.id}`);
-      expect(getByText(/Failed to delete customer/i)).toBeInTheDocument();
-    });
+    await waitFor(() =>
+      expect((axios.delete as jest.Mock).mock.calls[0][0]).toContain(
+        `/customers/${mockCustomer.id}`
+      )
+    );
+
+    const errorMessage = await findByText(/Failed to delete customer/i);
+    expect(errorMessage).toBeInTheDocument();
   });
 });
