@@ -35,7 +35,7 @@ beforeEach(() => {
   queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-         // turns retries off
+        // turns retries off
         retry: false,
       },
     },
@@ -43,7 +43,7 @@ beforeEach(() => {
       log: console.log,
       warn: console.warn,
       // no more errors on the console for tests
-      error: process.env.NODE_ENV === 'test' ? () => {} : console.error,
+      error: process.env.NODE_ENV === "test" ? () => {} : console.error,
     },
   });
 });
