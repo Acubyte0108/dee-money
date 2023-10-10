@@ -21,31 +21,31 @@ const CustomerSchema = z.object({
     .string()
     .min(1, "Please fill the first name")
     .regex(regex.englishCharacterOnly, {
-      message: "Must only contain English alphabets",
+      message: "Must contain only English alphabets and ( ' . - ) symbols",
     })
     .regex(regex.capitalFirst, {
-      message: "First character must be capitalized and not symbols",
+      message: "First character must be capitalized and not a symbol",
     })
     .regex(regex.containsOneSymbol, {
-      message: "Can contain only 1 of these ( ' . - ) symbol per word",
+      message: "Each word can contain only one of these symbols: ( ' . - )",
     })
     .refine((value) => !regex.specialWhitespace.test(value), {
-      message: "Wrong spacebar format",
+      message: "Incorrect spacebar format",
     }),
   lastName: z
     .string()
     .min(1, "Please fill the last name")
     .regex(regex.englishCharacterOnly, {
-      message: "Must only contain English alphabets",
+      message: "Must contain only English alphabets and ( ' . - ) symbols",
     })
     .regex(regex.capitalFirst, {
-      message: "First character must be capitalized and not symbols",
+      message: "First character must be capitalized and not a symbol",
     })
     .regex(regex.containsOneSymbol, {
-      message: "Can contain only 1 of these ( ' . - ) symbol per word",
+      message: "Each word can contain only one of these symbols: ( ' . - )",
     })
     .refine((value) => !regex.specialWhitespace.test(value), {
-      message: "Wrong spacebar format",
+      message: "Incorrect spacebar format",
     }),
   email: z.string().min(1, "Please fill the email address").email(),
   title: z.string().min(1, "Please select title"),
@@ -197,7 +197,7 @@ const FormModal = (props: FormModalProps) => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                   {errors.firstName && (
-                    <p className="text-red-500 mt-1 sm:text-base text-sm">{`${errors.firstName.message}`}</p>
+                    <p data-testid="first-name-error" className="text-red-500 mt-1 sm:text-base text-sm">{`${errors.firstName.message}`}</p>
                   )}
                 </div>
               </div>
@@ -218,7 +218,7 @@ const FormModal = (props: FormModalProps) => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                   {errors.lastName && (
-                    <p className="text-red-500 mt-1 sm:text-base text-sm">{errors.lastName.message}</p>
+                    <p data-testid="last-name-error" className="text-red-500 mt-1 sm:text-base text-sm">{errors.lastName.message}</p>
                   )}
                 </div>
               </div>
@@ -238,7 +238,7 @@ const FormModal = (props: FormModalProps) => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                   {errors.email && (
-                    <p className="text-red-500 mt-1 sm:text-base text-sm">{errors.email.message}</p>
+                    <p data-testid="email-error" className="text-red-500 mt-1 sm:text-base text-sm">{errors.email.message}</p>
                   )}
                 </div>
               </div>
