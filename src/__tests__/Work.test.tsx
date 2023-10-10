@@ -32,7 +32,20 @@ const mockCustomers: Customer[] = [
 let queryClient: QueryClient;
 
 beforeEach(() => {
-  queryClient = new QueryClient();
+  queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+         // turns retries off
+        retry: false,
+      },
+    },
+    logger: {
+      log: console.log,
+      warn: console.warn,
+      // no more errors on the console for tests
+      error: process.env.NODE_ENV === 'test' ? () => {} : console.error,
+    },
+  });
 });
 
 afterEach(() => {
