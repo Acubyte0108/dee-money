@@ -70,6 +70,9 @@ const DeletePopup = (props: DeletePopupProps) => {
             Failed to delete customer
           </div>
         )}
+        {mutation.isLoading && (<div className="text-lg rounded-md text-amber-600 bg-yellow-100 absolute text-center w-fit sm:py-3 py-2 sm:px-8 px-4 sm:top-2 top-4 sm:left-1/2 left-4 sm:-translate-x-1/2">
+            Deleting...
+        </div>)}
         <div className="flex flex-col justify-end items-center h-full">
           <div>
             <IconContext.Provider
