@@ -13,18 +13,18 @@ jest.mock("axios");
 const mockCustomers: Customer[] = [
   {
     id: "1",
-    firstName: "TestOne",
-    lastName: "Test-LastOne",
+    firstName: "Alice",
+    lastName: "Johnson",
     title: "Corporate Tactics Engineer",
-    email: "test1.last1@example.com",
+    email: "alice.johnson@example.com",
     country: "Malta",
   },
   {
     id: "2",
-    firstName: "TestTwo",
-    lastName: "Test-LastTwo",
+    firstName: "Charlie",
+    lastName: "Brown",
     title: "Corporate Tactics Engineer",
-    email: "test2.last2@example.com",
+    email: "charlie.brown@example.com",
     country: "Malta",
   },
 ];
@@ -49,7 +49,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
 describe("Test Work component", () => {
@@ -98,13 +98,10 @@ describe("Test Work component", () => {
     expect(customersTable).toBeInTheDocument();
 
     for (const customer of mockCustomers) {
-      const firstNameElement = await findByText(new RegExp(customer.firstName, "i"));
-      expect(firstNameElement).toBeInTheDocument();
+      const nameElement = await findByText(new RegExp(`${customer.firstName}\\s${customer.lastName}`));
+      expect(nameElement).toBeInTheDocument();
 
-      const lastNameElement = await findByText(new RegExp(customer.lastName, "i"));
-      expect(lastNameElement).toBeInTheDocument();
-
-      const emailElement = await findByText(new RegExp(customer.email, "i"));
+      const emailElement = await findByText(new RegExp(customer.email));
       expect(emailElement).toBeInTheDocument();
 
       const titleElements = await findAllByText(new RegExp(customer.title, "i"));

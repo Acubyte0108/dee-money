@@ -8,7 +8,7 @@ jest.mock("react-responsive", () => ({
 }));
 
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
 const mockHandleEditUser = jest.fn();
@@ -17,18 +17,18 @@ const mockHandleDeleteUser = jest.fn();
 const mockCustomers: Customer[] = [
   {
     id: "1",
-    firstName: "TestOne",
-    lastName: "Test-LastOne",
+    firstName: "Alice",
+    lastName: "Johnson",
     title: "Corporate Tactics Engineer",
-    email: "test1.last1@example.com",
+    email: "alice.johnson@example.com",
     country: "Malta",
   },
   {
     id: "2",
-    firstName: "TestTwo",
-    lastName: "Test-LastTwo",
+    firstName: "Charlie",
+    lastName: "Brown",
     title: "Corporate Tactics Engineer",
-    email: "test2.last2@example.com",
+    email: "charlie.brown@example.com",
     country: "Malta",
   },
 ];
@@ -52,8 +52,8 @@ describe("Test CustomersTable component", () => {
     expect(getByTestId('customers-table')).toBeInTheDocument();
 
     mockCustomers.forEach((customer) => {
-      expect(getByText(new RegExp(customer.firstName, "i"))).toBeInTheDocument();
-      expect(getByText(new RegExp(customer.lastName, "i"))).toBeInTheDocument();
+      expect(getByText(new RegExp(`${customer.firstName}\\s${customer.lastName}`))).toBeInTheDocument();
+      expect(getByText(new RegExp(customer.email))).toBeInTheDocument();
       expect(getByText(new RegExp(customer.email, "i"))).toBeInTheDocument();
       expect(getAllByText(new RegExp(customer.title, "i")).length).toBe(
         mockCustomers.filter((c) => c.title === customer.title).length
@@ -82,9 +82,8 @@ describe("Test CustomersTable component", () => {
     expect(getByTestId('customers-table-mobile')).toBeInTheDocument();
 
     mockCustomers.forEach((customer) => {
-      expect(getByText(new RegExp(customer.firstName, "i"))).toBeInTheDocument();
-      expect(getByText(new RegExp(customer.lastName, "i"))).toBeInTheDocument();
-      expect(getByText(new RegExp(customer.email, "i"))).toBeInTheDocument();
+      expect(getByText(new RegExp(`${customer.firstName}\\s${customer.lastName}`))).toBeInTheDocument();
+      expect(getByText(new RegExp(customer.email))).toBeInTheDocument();
       expect(getAllByText(new RegExp(customer.title, "i")).length).toBe(
         mockCustomers.filter((c) => c.title === customer.title).length
       );

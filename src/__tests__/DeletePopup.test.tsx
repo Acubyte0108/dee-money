@@ -8,10 +8,10 @@ jest.mock("axios");
 
 const mockCustomer: Customer = {
   id: "1",
-  firstName: "Test",
-  lastName: "Test-Last",
+  firstName: "Alice",
+  lastName: "Johnson",
   title: "Corporate Tactics Engineer",
-  email: "test.last@example.com",
+  email: "alice.johnson@example.com",
   country: "Malta",
 };
 
@@ -23,7 +23,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
 describe("Test DeletePopup component", () => {
@@ -41,7 +41,7 @@ describe("Test DeletePopup component", () => {
     expect(
       getByText(/Are you sure, to delete this customer/i)
     ).toBeInTheDocument();
-    expect(getByText(/Test Test-Last/i)).toBeInTheDocument();
+    expect(getByText(/Alice Johnson/i)).toBeInTheDocument();
   });
 
   it('calls delete function when "Delete" button is clicked', async () => {
