@@ -325,22 +325,218 @@ describe("Test FormModal component: Edit existing customer", () => {
   });
 });
 
-// describe("Test FormModal component: Form validation", () => {
-//     it("disables the submit button while submitting", async () => {
-//         (axios.post as jest.Mock).mockResolvedValueOnce({});
-    
-//         const { findByText } = render(
-//           <QueryClientProvider client={queryClient}>
-//             <FormModal toggle={mockToggle} />
-//           </QueryClientProvider>
-//         );
-//         const submitButton = await findByText(/Submit/i);
-    
-//         fireEvent.click(submitButton);
-    
-//         await waitFor(() => {
-//           expect(submitButton).toBeDisabled();
-//         });
-//       });
-    
-// })
+describe("Test FormModal component: Form validation", () => {
+  it("shows errors when submitting empty form", async () => {
+    const { findByText, findByTestId } = render(
+      <QueryClientProvider client={queryClient}>
+        <FormModal toggle={mockToggle} />
+      </QueryClientProvider>
+    );
+    const submitButton = await findByText(/Submit/i);
+
+    fireEvent.click(submitButton);
+
+    const firstNameError = await findByTestId("first-name-error");
+    expect(firstNameError).toHaveTextContent(/Please fill the first name/i);
+
+    const lastNameError = await findByTestId("last-name-error");
+    expect(lastNameError).toHaveTextContent(/Please fill the last name/i);
+
+    const emailError = await findByTestId("email-error");
+    expect(emailError).toHaveTextContent(/Please fill the email/i);
+  });
+
+  it("error occurs when submitting a form that contains non-English alphabets", async () => {
+    const { findByText, findByLabelText, findByTestId } = render(
+      <QueryClientProvider client={queryClient}>
+        <FormModal toggle={mockToggle} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    const fisrtNameInput = await findByLabelText(/First name/i);
+    fireEvent.input(fisrtNameInput, { target: { value: "Dave++" } });
+
+    const lastNameInput = await findByLabelText(/Last name/i);
+    fireEvent.input(lastNameInput, { target: { value: "Kruger" } });
+
+    const emailInput = await findByLabelText(/Email address/i);
+    fireEvent.input(emailInput, {
+      target: { value: "dave.kruger@example.com" },
+    });
+
+    const titleSelect = await findByLabelText(/Title/i);
+    fireEvent.change(titleSelect, {
+      target: { value: "Corporate Tactics Engineer" },
+    });
+
+    const countrySelect = await findByLabelText(/Country/i);
+    fireEvent.change(countrySelect, { target: { value: "Malta" } });
+
+    const submitButton = await findByText(/Submit/i);
+    fireEvent.click(submitButton);
+
+    const firstNameError = await findByTestId("first-name-error");
+    expect(firstNameError).toHaveTextContent(
+      new RegExp("Must contain only English alphabets and \\( ' \\. - \\) symbols", "i")
+    );
+  });
+
+  it("error occurs when submitting a form that starts with a lowercase letter and a symbol", async () => {
+    const { findByText, findByLabelText, findByTestId } = render(
+      <QueryClientProvider client={queryClient}>
+        <FormModal toggle={mockToggle} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    const fisrtNameInput = await findByLabelText(/First name/i);
+    fireEvent.input(fisrtNameInput, { target: { value: "dave" } });
+
+    const lastNameInput = await findByLabelText(/Last name/i);
+    fireEvent.input(lastNameInput, { target: { value: "-Kruger" } });
+
+    const emailInput = await findByLabelText(/Email address/i);
+    fireEvent.input(emailInput, {
+      target: { value: "dave.kruger@example.com" },
+    });
+
+    const titleSelect = await findByLabelText(/Title/i);
+    fireEvent.change(titleSelect, {
+      target: { value: "Corporate Tactics Engineer" },
+    });
+
+    const countrySelect = await findByLabelText(/Country/i);
+    fireEvent.change(countrySelect, { target: { value: "Malta" } });
+
+    const submitButton = await findByText(/Submit/i);
+    fireEvent.click(submitButton);
+
+    const firstNameError = await findByTestId("first-name-error");
+    expect(firstNameError).toHaveTextContent(
+      /First character must be capitalized and not a symbol/i
+    );
+
+    const lastNameError = await findByTestId("last-name-error");
+    expect(lastNameError).toHaveTextContent(
+      /First character must be capitalized and not a symbol/i
+    );
+  });
+
+  it("error occurs when submitting a form in which each word contains multiple instances of these symbols: ( ' . - )", async () => {
+    const { findByText, findByLabelText, findByTestId } = render(
+      <QueryClientProvider client={queryClient}>
+        <FormModal toggle={mockToggle} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    const fisrtNameInput = await findByLabelText(/First name/i);
+    fireEvent.input(fisrtNameInput, { target: { value: "D-a-ve" } });
+
+    const lastNameInput = await findByLabelText(/Last name/i);
+    fireEvent.input(lastNameInput, { target: { value: "K'ruger.." } });
+
+    const emailInput = await findByLabelText(/Email address/i);
+    fireEvent.input(emailInput, {
+      target: { value: "dave.kruger@example.com" },
+    });
+
+    const titleSelect = await findByLabelText(/Title/i);
+    fireEvent.change(titleSelect, {
+      target: { value: "Corporate Tactics Engineer" },
+    });
+
+    const countrySelect = await findByLabelText(/Country/i);
+    fireEvent.change(countrySelect, { target: { value: "Malta" } });
+
+    const submitButton = await findByText(/Submit/i);
+    fireEvent.click(submitButton);
+
+    const firstNameError = await findByTestId("first-name-error");
+    expect(firstNameError).toHaveTextContent(
+      new RegExp("Each word can contain only one of these symbols: \\( ' \\. - \\)", "i")
+    );
+
+    const lastNameError = await findByTestId("last-name-error");
+    expect(lastNameError).toHaveTextContent(
+      new RegExp("Each word can contain only one of these symbols: \\( ' \\. - \\)", "i")
+    );
+  });
+
+  it("error occurs when submitting a form with an incorrect spacebar format", async () => {
+    const { findByText, findByLabelText, findByTestId } = render(
+      <QueryClientProvider client={queryClient}>
+        <FormModal toggle={mockToggle} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    const fisrtNameInput = await findByLabelText(/First name/i);
+    fireEvent.input(fisrtNameInput, { target: { value: " Dave" } });
+
+    const lastNameInput = await findByLabelText(/Last name/i);
+    fireEvent.input(lastNameInput, { target: { value: "Kru  Ger" } });
+
+    const emailInput = await findByLabelText(/Email address/i);
+    fireEvent.input(emailInput, {
+      target: { value: "dave.kruger@example.com" },
+    });
+
+    const titleSelect = await findByLabelText(/Title/i);
+    fireEvent.change(titleSelect, {
+      target: { value: "Corporate Tactics Engineer" },
+    });
+
+    const countrySelect = await findByLabelText(/Country/i);
+    fireEvent.change(countrySelect, { target: { value: "Malta" } });
+
+    const submitButton = await findByText(/Submit/i);
+    fireEvent.click(submitButton);
+
+    const firstNameError = await findByTestId("first-name-error");
+    expect(firstNameError).toHaveTextContent(/Incorrect spacebar format/i);
+
+    const lastNameError = await findByTestId("last-name-error");
+    expect(lastNameError).toHaveTextContent(/Incorrect spacebar format/i);
+  });
+
+  it("error occurs when submitting a form with an incorrect email format", async () => {
+    const { findByText, findByLabelText, findByTestId } = render(
+      <QueryClientProvider client={queryClient}>
+        <FormModal toggle={mockToggle} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    const fisrtNameInput = await findByLabelText(/First name/i);
+    fireEvent.input(fisrtNameInput, { target: { value: "Dave" } });
+
+    const lastNameInput = await findByLabelText(/Last name/i);
+    fireEvent.input(lastNameInput, { target: { value: "Kruger" } });
+
+    const emailInput = await findByLabelText(/Email address/i);
+    fireEvent.input(emailInput, {
+      target: { value: "dave.kruger.example.com" },
+    });
+
+    const titleSelect = await findByLabelText(/Title/i);
+    fireEvent.change(titleSelect, {
+      target: { value: "Corporate Tactics Engineer" },
+    });
+
+    const countrySelect = await findByLabelText(/Country/i);
+    fireEvent.change(countrySelect, { target: { value: "Malta" } });
+
+    const submitButton = await findByText(/Submit/i);
+    fireEvent.click(submitButton);
+
+    const emailError = await findByTestId("email-error");
+    expect(emailError).toHaveTextContent(/Invalid email/i);
+  });
+});
