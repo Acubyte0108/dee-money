@@ -273,6 +273,56 @@ describe("Test FormModal component: Edit existing customer", () => {
 
     expect(mockToggle).toHaveBeenCalled();
   });
+
+  it("displays an error message when form submission fails", async () => {
+    (axios.patch as jest.Mock).mockRejectedValueOnce(new Error("Patch failed"));
+
+    const { findByText, findByLabelText } = render(
+      <QueryClientProvider client={queryClient}>
+        <FormModal toggle={mockToggle} userData={mockCustomer} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    const fisrtNameInput = await findByLabelText(/First name/i);
+    fireEvent.input(fisrtNameInput, { target: { value: "Charliez" } });
+
+    const lastNameInput = await findByLabelText(/Last name/i);
+    fireEvent.input(lastNameInput, { target: { value: "Brownz" } });
+
+    const emailInput = await findByLabelText(/Email address/i);
+    fireEvent.input(emailInput, {
+      target: { value: "charliez.brownz@example.com" },
+    });
+
+    const titleSelect = await findByLabelText(/Title/i);
+    fireEvent.change(titleSelect, {
+      target: { value: "Corporate Tactics Engineer" },
+    });
+
+    const countrySelect = await findByLabelText(/Country/i);
+    fireEvent.change(countrySelect, { target: { value: "Malta" } });
+
+    const submitButton = await findByText(/Submit/i);
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect((axios.patch as jest.Mock).mock.calls[0][0]).toContain(
+        `/customers/${mockCustomer.id}`
+      );
+      expect((axios.patch as jest.Mock).mock.calls[0][1]).toEqual({
+        firstName: "Charliez",
+        lastName: "Brownz",
+        email: "charliez.brownz@example.com",
+        title: "Corporate Tactics Engineer",
+        country: "Malta",
+      });
+    });
+
+    const errorMessage = await findByText(/Failed to summit the form/i);
+    expect(errorMessage).toBeInTheDocument();
+  });
 });
 
 // describe("Test FormModal component: Form validation", () => {
