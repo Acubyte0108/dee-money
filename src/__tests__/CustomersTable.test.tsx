@@ -7,14 +7,6 @@ jest.mock("react-responsive", () => ({
   useMediaQuery: jest.fn(),
 }));
 
-beforeEach(() => {
-  (useMediaQuery as jest.Mock).mockImplementation((query) => {
-    if (query.query === "(min-width: 640px)") {
-      return true;
-    }
-  });
-});
-
 afterEach(() => {
   jest.clearAllMocks();
 });
@@ -43,6 +35,12 @@ const mockCustomers: Customer[] = [
 
 describe("Test CustomersTable component", () => {
   it("renders customers on big screen", () => {
+    (useMediaQuery as jest.Mock).mockImplementation((query) => {
+      if (query.query === "(min-width: 640px)") {
+        return true;
+      }
+    });
+
     const { getByText, getAllByText, getByTestId } = render(
       <CustomersTable
         customers={mockCustomers}
