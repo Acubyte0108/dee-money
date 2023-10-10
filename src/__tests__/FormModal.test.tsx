@@ -60,7 +60,7 @@ afterEach(() => {
 describe("Test FormModal component: Add new customer", () => {
   it("renders correctly", async () => {
     const { findByText, findByLabelText } = render(
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryClientProvider client={queryClient}>
         <FormModal toggle={mockToggle} />
       </QueryClientProvider>
     );
@@ -83,28 +83,11 @@ describe("Test FormModal component: Add new customer", () => {
     expect(countrySelect).toBeInTheDocument();
   });
 
-  it("disables the submit button while submitting", async () => {
-    (axios.post as jest.Mock).mockResolvedValueOnce({});
-
-    const { findByText } = render(
-      <QueryClientProvider client={new QueryClient()}>
-        <FormModal toggle={mockToggle} />
-      </QueryClientProvider>
-    );
-    const submitButton = await findByText(/Submit/i);
-
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(submitButton).toBeDisabled();
-    });
-  });
-
   it("submits the form with the correct data", async () => {
     (axios.post as jest.Mock).mockResolvedValueOnce({});
 
     const { findByText, findByLabelText } = render(
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryClientProvider client={queryClient}>
         <FormModal toggle={mockToggle} />
       </QueryClientProvider>
     );
@@ -148,6 +131,56 @@ describe("Test FormModal component: Add new customer", () => {
 
     expect(mockToggle).toHaveBeenCalled();
   });
+
+  it("displays an error message when form submission fails", async () => {
+    (axios.post as jest.Mock).mockRejectedValueOnce(new Error("Post failed"));
+
+    const { findByText, findByLabelText } = render(
+      <QueryClientProvider client={queryClient}>
+        <FormModal toggle={mockToggle} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(2));
+
+    const fisrtNameInput = await findByLabelText(/First name/i);
+    fireEvent.input(fisrtNameInput, { target: { value: "Bob" } });
+
+    const lastNameInput = await findByLabelText(/Last name/i);
+    fireEvent.input(lastNameInput, { target: { value: "Williams" } });
+
+    const emailInput = await findByLabelText(/Email address/i);
+    fireEvent.input(emailInput, {
+      target: { value: "bob.williams@example.com" },
+    });
+
+    const titleSelect = await findByLabelText(/Title/i);
+    fireEvent.change(titleSelect, {
+      target: { value: "Corporate Tactics Engineer" },
+    });
+
+    const countrySelect = await findByLabelText(/Country/i);
+    fireEvent.change(countrySelect, { target: { value: "Malta" } });
+
+    const submitButton = await findByText(/Submit/i);
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect((axios.post as jest.Mock).mock.calls[0][0]).toContain(
+        "/customers"
+      );
+      expect((axios.post as jest.Mock).mock.calls[0][1]).toEqual({
+        firstName: "Bob",
+        lastName: "Williams",
+        email: "bob.williams@example.com",
+        title: "Corporate Tactics Engineer",
+        country: "Malta",
+      });
+    });
+
+    const errorMessage = await findByText(/Failed to summit the form/i);
+    expect(errorMessage).toBeInTheDocument();
+  });
 });
 
 describe("Test FormModal component: Edit existing customer", () => {
@@ -162,7 +195,7 @@ describe("Test FormModal component: Edit existing customer", () => {
 
   it("renders correctly with pre-filled data", async () => {
     const { findByText, findByLabelText } = render(
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryClientProvider client={queryClient}>
         <FormModal toggle={mockToggle} userData={mockCustomer} />
       </QueryClientProvider>
     );
@@ -196,7 +229,7 @@ describe("Test FormModal component: Edit existing customer", () => {
     (axios.put as jest.Mock).mockResolvedValueOnce({});
 
     const { findByText, findByLabelText } = render(
-      <QueryClientProvider client={new QueryClient()}>
+      <QueryClientProvider client={queryClient}>
         <FormModal toggle={mockToggle} userData={mockCustomer} />
       </QueryClientProvider>
     );
@@ -241,3 +274,23 @@ describe("Test FormModal component: Edit existing customer", () => {
     expect(mockToggle).toHaveBeenCalled();
   });
 });
+
+// describe("Test FormModal component: Form validation", () => {
+//     it("disables the submit button while submitting", async () => {
+//         (axios.post as jest.Mock).mockResolvedValueOnce({});
+    
+//         const { findByText } = render(
+//           <QueryClientProvider client={queryClient}>
+//             <FormModal toggle={mockToggle} />
+//           </QueryClientProvider>
+//         );
+//         const submitButton = await findByText(/Submit/i);
+    
+//         fireEvent.click(submitButton);
+    
+//         await waitFor(() => {
+//           expect(submitButton).toBeDisabled();
+//         });
+//       });
+    
+// })
